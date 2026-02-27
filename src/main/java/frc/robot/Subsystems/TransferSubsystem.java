@@ -22,33 +22,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.CANId.CAN_s1;
-import frc.robot.Constants.CANId.CAN_s2;
+import frc.robot.Constants.CANId.CAN_Intake;
+import frc.robot.Constants.CANId.CAN_Shooter;
+
 
 public class TransferSubsystem extends SubsystemBase {
   private DigitalInput laserLeft = new DigitalInput(0);
   private DigitalInput laserRight = new DigitalInput(1);
 
+  private SparkMax beltMotor = new SparkMax(CAN_Intake.TransferCan, MotorType.kBrushless);
 
-  private SparkMax beltMotor = new SparkMax(CAN_s1.TransferCan, MotorType.kBrushless);
-
-  private TalonFX kickerMotor = new TalonFX(CAN_s2.KickerCan, CANBus.roboRIO());
+  private TalonFX kickerMotor = new TalonFX(CAN_Shooter.KickerCan, CANBus.roboRIO());
   private DutyCycleOut Power = new DutyCycleOut(0);
 
   private final TalonFXConfiguration kickerConfig = new TalonFXConfiguration();
   private final SparkMaxConfig beltConfig = new SparkMaxConfig();
 
-
-
-
   public TransferSubsystem() {
     beltConfig
-      .inverted(true)
-      .idleMode(IdleMode.kBrake);
+        .inverted(true)
+        .idleMode(IdleMode.kBrake);
 
-      beltMotor.configure(beltConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    beltMotor.configure(beltConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-      kickerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    kickerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     kickerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     kickerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
@@ -58,25 +55,25 @@ public class TransferSubsystem extends SubsystemBase {
 
   }
 
-  
-  public void setSpeeds(double beltSpeed, double kickerSpeed){
+  public void setSpeeds(double beltSpeed, double kickerSpeed) {
     beltMotor.set(beltSpeed);
     kickerMotor.setControl(Power.withOutput(kickerSpeed));
   }
 
-  public Command TransferShootCMD(TransferSubsystem transferSubsystem){
-    return new InstantCommand(()->{
-        transferSubsystem.setSpeeds(1, 1);
+  public Command TransferShootCMD(TransferSubsystem transferSubsystem) {
+    return new InstantCommand(() -> {
+      transferSubsystem.setSpeeds(1, 1);
     });
   }
 
-  public Command StopTransferCMD(TransferSubsystem transferSubsystem){
-        return new InstantCommand(()->{
-          transferSubsystem.setSpeeds(0,0);
-        });
+  public Command StopTransferCMD(TransferSubsystem transferSubsystem) {
+    return new InstantCommand(() -> {
+      transferSubsystem.setSpeeds(0, 0);
+    });
   }
+
   @Override
-  public void periodic(){
+  public void periodic() {
     SmartDashboard.putBoolean("leftTransfer", laserLeft.get());
     SmartDashboard.putBoolean("rightTransfer", laserRight.get());
   }

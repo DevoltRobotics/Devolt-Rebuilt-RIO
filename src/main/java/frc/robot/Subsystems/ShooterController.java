@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.Subsystems;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,12 +44,10 @@ public class ShooterController {
         SHOOTER_MAP.put(3.5,  new ShooterParams(51.3, 0.93));
         SHOOTER_MAP.put(4.0,  new ShooterParams(55.7, 1.08));
         SHOOTER_MAP.put(4.5,  new ShooterParams(59.7, 1.16));
-        SHOOTER_MAP.put(5.0,  new ShooterParams(63.7, 01.24));
+        SHOOTER_MAP.put(5.0,  new ShooterParams(63.7, 1.24));
         SHOOTER_MAP.put(5.5,  new ShooterParams(66.4, 1.34));
         SHOOTER_MAP.put(6.0,  new ShooterParams(69.4, 1.53));
         SHOOTER_MAP.put(9.3,  new ShooterParams(100.0, 2.18));
-
-
 
         // Fill distance interpolation map
         for (Entry<Double, ShooterParams> e : SHOOTER_MAP.entrySet()) {

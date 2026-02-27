@@ -11,7 +11,6 @@ public class Constants {
     public static final class PoseinField{ //poses para autoacomodación
         public static final Pose2d frontofapriltag = new Pose2d(7.0, 4.0, new Rotation2d(0));
         public static final Pose2d humanPlayer = new Pose2d(0, 0, new Rotation2d(0));
-
     }
 
     public static final class TurretsPos{
@@ -20,8 +19,8 @@ public class Constants {
 
     }
 
-    public class CANId {
-        public class CAN_s0{
+    public static final class CANId {
+        public static final class CAN_Swerve{
             public static final int PigeonCan = 2;
 
             public static final int FLEncoderCan = 3;
@@ -38,23 +37,23 @@ public class Constants {
             public static final int RRTurnCan = 13;
             public static final int RRDriveCan = 14;
         }
-        public class CAN_s1{
+        public static final class CAN_Intake{
 
-            public static final int PivotCan = 3;
-            public static final int TransferCan = 2;
-            public static final int IntakeCan = 4;
+            public static final int PivotCan = 15;
+            public static final int TransferCan = 16;
+            public static final int IntakeCan = 17;
         } 
 
-        public class CAN_s2{
-            public static final int LTurretCan = 1;
-            public static final int RFlywheelCan = 5;
-            public static final int KickerCan = 3;
-            public static final int RTurretCan = 4;
-            public static final int LFlywheelCan = 2;
+        public static final class CAN_Shooter{
+            public static final int LTurretCan = 18;
+            public static final int RFlywheelCan = 19;
+            public static final int KickerCan = 20;
+            public static final int RTurretCan = 21;
+            public static final int LFlywheelCan = 22;
         }
     }
 
-    public class LimelightConstants{
+    public static final class LimelightConstants{
         public static final String backLimelightName = "limelight-backll";
         public static final String frontLimelightName = "limelight-frontll"; 
     }

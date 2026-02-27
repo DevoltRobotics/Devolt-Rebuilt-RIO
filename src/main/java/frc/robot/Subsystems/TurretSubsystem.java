@@ -27,31 +27,52 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * Turret subsystem that:
+ *  - Holds an internal desiredAngle (degrees)
+ *  - Uses TurretCoordinator to produce a REAL safe setpoint every loop
+ *  - Enforces hard limits at motor output
+ *
+ * IMPORTANT:
+ *  - You should construct ONE TurretCoordinator instance and pass it to both turrets.
+ *  - Each turret must also get its Side (LEFT or RIGHT).
+ */
 public class TurretSubsystem extends SubsystemBase {
 
-  private SparkMax Lturret;
-  private SparkMaxConfig TurretConfig = new SparkMaxConfig();
+  private final SparkMax turretMotor;
+  private final SparkMaxConfig turretConfig = new SparkMaxConfig();
 
   public final Translation2d turretOffset;
 
-  PIDController turretPidController = new PIDController(.01, 0, 0);
+  private final TurretCoordinator coordinator;
+  private final TurretCoordinator.Side side;
 
-  private double desiredAngle = 0;
-  double TurretOut = 0;
+  private final PIDController turretPidController = new PIDController(.01, 0, 0);
 
-  double turretOffsetEnc = 0;
+  // Desired angle requested by commands (degrees, can be any representation)
+  private double desiredAngleDeg = 0.0;
 
-  double turretRelativePos = 0;
-  double normalizedAngle = 0;
+  // Output to motor (clamped)
+  private double turretOut = 0.0;
 
-  double Upperlimit = 270;
-  double Lowerlimit = -90;
+  // Encoder offset
+  private double turretOffsetEnc = 0.0;
+
+  // Current turret position relative to offset (degrees)
+  private double turretRelativePosDeg = 0.0;
+
+  // What we actually command after coordinator + limit normalization (degrees)
+  private double commandedSetpointDeg = 0.0;
+
+  // Limits (degrees)
+  private double upperLimitDeg = 270.0;
+  private double lowerLimitDeg = -90.0;
 
   // ---------------- Mechanism2d ----------------
   private final LoggedMechanism2d mech = new LoggedMechanism2d(3, 3);
   private final LoggedMechanismRoot2d root = mech.getRoot("TurretRoot", 1.5, 1.5);
 
-  // Azul = posición real
+  // Blue = actual position
   private final LoggedMechanismLigament2d turretLigament = root.append(new LoggedMechanismLigament2d(
       "TurretActual",
       1.0,
@@ -59,7 +80,7 @@ public class TurretSubsystem extends SubsystemBase {
       6,
       new Color8Bit(Color.kBlue)));
 
-  // Rojo = setpoint (deseado)
+  // Red = target setpoint
   private final LoggedMechanismLigament2d targetLigament = root.append(new LoggedMechanismLigament2d(
       "TurretTarget",
       1.2,
@@ -67,7 +88,7 @@ public class TurretSubsystem extends SubsystemBase {
       4,
       new Color8Bit(Color.kRed)));
 
-  // Verde / Naranja = límites (visuales)
+  // Green / Orange = limits (visual)
   private final LoggedMechanismLigament2d upperLimitLigament = root.append(new LoggedMechanismLigament2d(
       "UpperLimit",
       1.35,
@@ -83,17 +104,27 @@ public class TurretSubsystem extends SubsystemBase {
       new Color8Bit(Color.kOrange)));
   // ------------------------------------------------
 
-  public TurretSubsystem(int canId, Translation2d turretOffset) {
-    Lturret = new SparkMax(canId, MotorType.kBrushless);
+  public TurretSubsystem(
+      int canId,
+      TurretCoordinator coordinator,
+      TurretCoordinator.Side side,
+      Translation2d turretOffset
+  ) {
+    turretMotor = new SparkMax(canId, MotorType.kBrushless);
     this.turretOffset = turretOffset;
 
-    TurretConfig
+    this.coordinator = coordinator;
+    this.side = side;
+
+    turretConfig
         .inverted(true)
         .idleMode(IdleMode.kBrake);
-    TurretConfig.encoder
-        .positionConversionFactor(7.2);
+    turretConfig.encoder
+        // Your factor: 7.2 deg per motor-encoder unit
+        .positionConversionFactor(7.2)
+        .velocityConversionFactor(7.2);
 
-    Lturret.configure(TurretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     setName("TurretSubsystem" + canId);
 
@@ -104,62 +135,82 @@ public class TurretSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    turretRelativePos = Lturret.getEncoder().getPosition() - turretOffsetEnc;
+    // 1) Measure current relative position (deg)
+    turretRelativePosDeg = turretMotor.getEncoder().getPosition() - turretOffsetEnc;
 
-    if (desiredAngle > Upperlimit) {
-      normalizedAngle = desiredAngle - 360;
-    } else if (desiredAngle < Lowerlimit) {
-      normalizedAngle = desiredAngle + 360;
-    } else {
-      normalizedAngle = desiredAngle;
+    // 2) Ask coordinator for the REAL safe setpoint (handles collision + limit-safe target representation)
+    Rotation2d current = Rotation2d.fromDegrees(turretRelativePosDeg);
+    Rotation2d requested = Rotation2d.fromDegrees(desiredAngleDeg);
+
+    Rotation2d realSetpoint = coordinator.intentToRotate(
+        side,
+        requested,
+        current,
+        turretMotor.getEncoder().getVelocity()
+    );
+
+    commandedSetpointDeg = realSetpoint.getDegrees();
+
+    // 3) PID
+    turretPidController.setSetpoint(commandedSetpointDeg);
+    double pidOut = turretPidController.calculate(turretRelativePosDeg);
+
+    // 4) Clamp motor output
+    turretOut = MathUtil.clamp(pidOut, -0.5, 0.5);
+
+    // 5) Hard limit enforcement (never drive past limits)
+    if (turretRelativePosDeg >= upperLimitDeg && turretOut > 0) {
+      turretOut = 0;
+    }
+    if (turretRelativePosDeg <= lowerLimitDeg && turretOut < 0) {
+      turretOut = 0;
     }
 
-    turretPidController.setSetpoint(normalizedAngle);
+    // 6) Apply
+    turretMotor.set(turretOut);
 
-    double pidOut = turretPidController.calculate(turretRelativePos);
-    TurretOut = MathUtil.clamp(pidOut, -0.5, 0.5);
+    // 7) Visual + telemetry
+    turretLigament.setAngle(turretRelativePosDeg);
+    targetLigament.setAngle(commandedSetpointDeg);
+    upperLimitLigament.setAngle(upperLimitDeg);
+    lowerLimitLigament.setAngle(lowerLimitDeg);
 
-    if (turretRelativePos >= Upperlimit && TurretOut > 0) {
-      TurretOut = 0;
-    }
-    if (turretRelativePos <= Lowerlimit && TurretOut < 0) {
-      TurretOut = 0;
-    }
-
-    Lturret.set(TurretOut);
-
-    turretLigament.setAngle(turretRelativePos);
-    targetLigament.setAngle(normalizedAngle);
-    upperLimitLigament.setAngle(Upperlimit);
-    lowerLimitLigament.setAngle(Lowerlimit);
-
-    SmartDashboard.putNumber("Turret/RelPos", turretRelativePos);
-    SmartDashboard.putNumber("Turret/Desired", desiredAngle);
-    SmartDashboard.putNumber("Turret/Norm", normalizedAngle);
-    SmartDashboard.putNumber("Turret/Out", TurretOut);
+    SmartDashboard.putNumber(getName() + "/RelPosDeg", turretRelativePosDeg);
+    SmartDashboard.putNumber(getName() + "/DesiredDeg", desiredAngleDeg);
+    SmartDashboard.putNumber(getName() + "/CmdSetpointDeg", commandedSetpointDeg);
+    SmartDashboard.putNumber(getName() + "/Out", turretOut);
+    SmartDashboard.putNumber(getName() + "/LowerLimitDeg", lowerLimitDeg);
+    SmartDashboard.putNumber(getName() + "/UpperLimitDeg", upperLimitDeg);
   }
+
+  // ---------------- Public API ----------------
 
   public Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(turretRelativePos);
+    return Rotation2d.fromDegrees(turretRelativePosDeg);
   }
 
-  public void setAngle(double angle) {
-    desiredAngle = angle;
+  /** Desired angle in degrees (can be any representation; coordinator will unwrap safely). */
+  public void setAngle(double angleDeg) {
+    desiredAngleDeg = angleDeg;
+  }
+
+  /** Optional: set limits if they differ per turret */
+  public void setLimits(double lowerDeg, double upperDeg) {
+    lowerLimitDeg = lowerDeg;
+    upperLimitDeg = upperDeg;
   }
 
   public void resetOffset() {
-    turretOffsetEnc = Lturret.getEncoder().getPosition();
+    turretOffsetEnc = turretMotor.getEncoder().getPosition();
   }
+
+  // ---------------- Commands ----------------
 
   public Command resetOffsetCMD() {
-    return new InstantCommand(() -> {
-      resetOffset();
-    });
+    return new InstantCommand(this::resetOffset, this);
   }
 
-  public Command SetTurretPosCMD(double Pos) {
-    return new InstantCommand(() -> {
-      setAngle(Pos);
-    }, this);
+  public Command setTurretPosCMD(double posDeg) {
+    return new InstantCommand(() -> setAngle(posDeg), this);
   }
 }

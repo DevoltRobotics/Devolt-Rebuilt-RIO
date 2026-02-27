@@ -20,11 +20,12 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.SOTFCommand;
 import frc.robot.Constants.TurretsPos;
-import frc.robot.Constants.CANId.CAN_s2;
+import frc.robot.Constants.CANId.CAN_Shooter;
 import frc.robot.Subsystems.CommandSwerveDrivetrain;
 import frc.robot.Subsystems.IntakeSubsystem;
 import frc.robot.Subsystems.ShooterSubsystem;
 import frc.robot.Subsystems.TransferSubsystem;
+import frc.robot.Subsystems.TurretCoordinator;
 import frc.robot.Subsystems.TurretSubsystem;
 
 public class RobotContainer {
@@ -48,10 +49,17 @@ public class RobotContainer {
 
     public final TransferSubsystem transferSubsystem = new TransferSubsystem();
 
-    public final ShooterSubsystem shooterLeftSubsystem = new ShooterSubsystem(CAN_s2.LFlywheelCan, drivetrain.getState().Pose);
-    public final TurretSubsystem turretLeftSubsystem = new TurretSubsystem(CAN_s2.LTurretCan, TurretsPos.LeftTurretOffset);
+    public final TurretCoordinator turretCoordinator = new TurretCoordinator();
 
-    public final ShooterSubsystem shooterRightSubsystem = new ShooterSubsystem(CAN_s2.RFlywheelCan, drivetrain.getState().Pose);
+    public final ShooterSubsystem shooterLeftSubsystem = new ShooterSubsystem(CAN_Shooter.LFlywheelCan, drivetrain.getState().Pose);
+    public final TurretSubsystem turretLeftSubsystem = new TurretSubsystem(
+        CAN_Shooter.LTurretCan, 
+        turretCoordinator, 
+        TurretCoordinator.Side.LEFT, 
+        TurretsPos.LeftTurretOffset
+    );
+
+    public final ShooterSubsystem shooterRightSubsystem = new ShooterSubsystem(CAN_Shooter.RFlywheelCan, drivetrain.getState().Pose);
     //public final TurretSubsystem turretRightSubsystem = new TurretSubsystem(CAN_s2.RTurretCan);
     
     public RobotContainer() {
@@ -120,8 +128,8 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(transferSubsystem.TransferShootCMD(transferSubsystem));
         joystick.leftBumper().onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
-        joystick.rightStick().onTrue(turretLeftSubsystem.SetTurretPosCMD(0));
-        joystick.leftStick().onTrue(turretLeftSubsystem.SetTurretPosCMD(89));
+        joystick.rightStick().onTrue(turretLeftSubsystem.setTurretPosCMD(0));
+        joystick.leftStick().onTrue(turretLeftSubsystem.setTurretPosCMD(89));
 
         povRight.onTrue(shooterLeftSubsystem.SetVelocityCMD(100));
         povLeft.onTrue(shooterRightSubsystem.SetVelocityCMD(17));
