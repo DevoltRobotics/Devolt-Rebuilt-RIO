@@ -4,6 +4,8 @@
 
 package frc.robot.Subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -78,7 +80,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     rollerMotor.getConfigurator().apply(rollerConfig);
 
-    var table = NetworkTableInstance.getDefault().getTable("pivot");
+    var table = NetworkTableInstance.getDefault().getTable("PivotPID");
 
     table.getDoubleTopic("kP").publish().set(kP);
     table.getDoubleTopic("kI").publish().set(kI);
@@ -89,7 +91,6 @@ public class IntakeSubsystem extends SubsystemBase {
     kDSub = table.getDoubleTopic("kD").subscribe(kD);
 
     pivotPID.setTolerance(tolerance);
-
   }
 
   @Override
@@ -108,7 +109,6 @@ public class IntakeSubsystem extends SubsystemBase {
       kD = newkD;
 
       pivotPID.setPID(kP, kI, kD);
-
     }
 
     if (pivotEncoder.getPosition() > 0.382) {
@@ -116,14 +116,11 @@ public class IntakeSubsystem extends SubsystemBase {
     } else {
       pivot.set(PivotOut);
     }
-    org.littletonrobotics.junction.Logger.recordOutput("Pivot/setpoint", desiredPosition);
-    org.littletonrobotics.junction.Logger.recordOutput("Pivot/error", pivotPID.getError());
-
-    SmartDashboard.putNumber("pivot/setpoint", desiredPosition);
-    SmartDashboard.putNumber("pivot/error", pivotPID.getError());
-    SmartDashboard.putNumber("pivot/output", PivotOut);
-    SmartDashboard.putNumber("pivot/Pos", pivotEncoder.getPosition());
-
+    
+    Logger.recordOutput("Pivot/setpoint", desiredPosition);
+    Logger.recordOutput("Pivot/error", pivotPID.getError());
+    Logger.recordOutput("Pivot/output", PivotOut);
+    Logger.recordOutput("Pivot/Pos", pivotEncoder.getPosition());
   }
 
   public void setRollerSpeed(double desiredRollerSpeed) {

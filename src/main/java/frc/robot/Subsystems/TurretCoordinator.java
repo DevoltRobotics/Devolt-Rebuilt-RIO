@@ -33,8 +33,8 @@ public class TurretCoordinator {
   public static final double TURRET_MINOR_AXIS_IN = 7.0;
 
   // Encoder-zero to ellipse-major-axis offsets (deg) (tune if needed)
-  public static final double PHI_LEFT_DEG  = 0.0;
-  public static final double PHI_RIGHT_DEG = 0.0;
+  public static final double PHI_LEFT_DEG  = 90.0;
+  public static final double PHI_RIGHT_DEG = 90.0;
 
   // ===================== Safety / Behavior =====================
   public static final double CLEARANCE_ENTER_IN = 0.75; // start holding when predicted overlap closer than this
@@ -43,8 +43,8 @@ public class TurretCoordinator {
   public static final double ON_TARGET_TOL_DEG = 1.5;
 
   // Lookahead horizon
-  public static final double DT_SEC = 0.02;
-  public static final int LOOKAHEAD_STEPS = 4;         // 80ms
+  public static final double DT_SEC = 0.05;
+  public static final int LOOKAHEAD_STEPS = 8;         // 80ms
   public static final double MAX_LOOKAHEAD_DEG = 25.0; // clamp crazy velocities / spikes
 
   public enum Side { LEFT, RIGHT }
@@ -126,9 +126,6 @@ public class TurretCoordinator {
 
     rightMajor = rightRoot.append(new LoggedMechanismLigament2d("RightMajor", aMech, 0.0, 4.0, C_WAIT));
     rightMinor = rightRoot.append(new LoggedMechanismLigament2d("RightMinor", bMech, 90.0, 4.0, C_WAIT));
-
-    // Record mechanism (updates propagate when you mutate ligaments)
-    Logger.recordOutput("TurretCoordinator/Mechanism2d", mech);
   }
 
   /**
@@ -288,8 +285,8 @@ public class TurretCoordinator {
 
   private void updateMechanismView() {
     // Current angles in degrees
-    double lDeg = leftCurrent.getDegrees();
-    double rDeg = rightCurrent.getDegrees();
+    double lDeg = leftCurrent.plus(Rotation2d.fromDegrees(PHI_LEFT_DEG)).getDegrees();
+    double rDeg = rightCurrent.plus(Rotation2d.fromDegrees(PHI_RIGHT_DEG)).getDegrees();
 
     // Update cross angles
     leftMajor.setAngle(lDeg);
@@ -335,6 +332,9 @@ public class TurretCoordinator {
     Logger.recordOutput("TurretCoordinator/LeftTargetDeg", leftTarget.getDegrees());
     Logger.recordOutput("TurretCoordinator/RightTargetDeg", rightTarget.getDegrees());
     Logger.recordOutput("TurretCoordinator/WillCollideLookahead", willCollideEnter);
+
+    // Record mechanism (updates propagate when you mutate ligaments)
+    Logger.recordOutput("TurretCoordinator/Mechanism2d", mech);
   }
 
   // ===================== Angle helpers =====================

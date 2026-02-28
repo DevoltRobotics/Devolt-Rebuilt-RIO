@@ -96,7 +96,7 @@ public class SOTFCommand extends Command {
         turretFieldPos,
         new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
         new Translation2d(Goal_X, Goal_Y),
-        0.092
+        dt
     );
 
     shooter.setVelocity(result.requiredRps());

@@ -65,7 +65,7 @@ public class TurretSubsystem extends SubsystemBase {
   private double commandedSetpointDeg = 0.0;
 
   // Limits (degrees)
-  private double upperLimitDeg = 270.0;
+  private double upperLimitDeg = 250.0;
   private double lowerLimitDeg = -90.0;
 
   // ---------------- Mechanism2d ----------------
@@ -105,28 +105,18 @@ public class TurretSubsystem extends SubsystemBase {
   // ------------------------------------------------
 
   public TurretSubsystem(
-      int canId,
+      SparkMax motor,
       TurretCoordinator coordinator,
       TurretCoordinator.Side side,
       Translation2d turretOffset
   ) {
-    turretMotor = new SparkMax(canId, MotorType.kBrushless);
+    turretMotor = motor;
     this.turretOffset = turretOffset;
 
     this.coordinator = coordinator;
     this.side = side;
-
-    turretConfig
-        .inverted(true)
-        .idleMode(IdleMode.kBrake);
-    turretConfig.encoder
-        // Your factor: 7.2 deg per motor-encoder unit
-        .positionConversionFactor(7.2)
-        .velocityConversionFactor(7.2);
-
-    turretMotor.configure(turretConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    setName("TurretSubsystem" + canId);
+    
+    setName("TurretSubsystem-" + side.name());
 
     Logger.recordOutput(getName() + "/TurretMechanism2d", mech);
 
@@ -156,7 +146,7 @@ public class TurretSubsystem extends SubsystemBase {
     double pidOut = turretPidController.calculate(turretRelativePosDeg);
 
     // 4) Clamp motor output
-    turretOut = MathUtil.clamp(pidOut, -0.5, 0.5);
+    turretOut = MathUtil.clamp(pidOut, -0.4, 0.4);
 
     // 5) Hard limit enforcement (never drive past limits)
     if (turretRelativePosDeg >= upperLimitDeg && turretOut > 0) {
