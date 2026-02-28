@@ -26,6 +26,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,6 +45,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -266,6 +268,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
+
+        SmartDashboard.putNumber("llTA", LimelightHelpers.getTA("limelight-backll"));
         /*
          * Periodically try to apply the operator perspective.
          * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
@@ -339,7 +343,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void visionEstimate(){
-        LimelightHelpers.SetIMUMode("backll", 0);
+        LimelightHelpers.SetIMUMode(LimelightConstants.backLimelightName, 0);
         LimelightHelpers.setPipelineIndex(LimelightConstants.backLimelightName, 0);
         LimelightHelpers.setPipelineIndex(LimelightConstants.frontLimelightName, 0);
 
@@ -375,7 +379,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
                 
             if (!rejectUpdatef){
-                //addVisionMeasurement(mt2f.pose, mt2f.timestampSeconds);
+                addVisionMeasurement(mt2f.pose, mt2f.timestampSeconds);
 
         }
     }

@@ -10,12 +10,14 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.SOTFCommand;
@@ -37,11 +39,12 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    //private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     public final CommandXboxController joystick = new CommandXboxController(0);
+    public final Joystick buttonBoard = new Joystick(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -92,9 +95,9 @@ public class RobotContainer {
         );
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
+        /*joystick.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        ));
+        ));*/
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -114,19 +117,33 @@ public class RobotContainer {
         intakeSubsystem.IntakeinCMD(intakeSubsystem)));
 
         joystick.rightBumper().onFalse(intakeSubsystem.pivotDownSafeCMD());
-    
         joystick.rightBumper().onFalse(intakeSubsystem.IntakeStopCMD(intakeSubsystem));
 
+        new JoystickButton(buttonBoard, 8).onTrue(new ParallelCommandGroup(
+        intakeSubsystem.pivotDownCMD(),    
+        intakeSubsystem.IntakeinCMD(intakeSubsystem)));
+
+        new JoystickButton(buttonBoard, 8).onFalse(new ParallelCommandGroup(
+        intakeSubsystem.pivotDownSafeCMD(),    
+        intakeSubsystem.IntakeStopCMD(intakeSubsystem)));
+
+       
+
         Trigger povUp = new Trigger(() -> joystick.getHID().getPOV() == 1);
-        Trigger povDown = new Trigger(() -> joystick.getHID().getPOV() == 4);
+        //Trigger povDown = new Trigger(() -> joystick.getHID().getPOV() == 4);
         Trigger povRight = new Trigger(() -> joystick.getHID().getPOV() == 2);
         Trigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
 
-        povDown.onTrue(intakeSubsystem.pivotDownSafeCMD());
+
+        joystick.pov(0).onTrue(intakeSubsystem.pivotUpCMD()); //no estuvo detectando el POV de xbox, esta forma si jala
         povUp.onTrue(intakeSubsystem.pivotUpCMD());
+        new JoystickButton(buttonBoard, 7).onTrue(intakeSubsystem.pivotUpCMD());
 
         joystick.leftBumper().onTrue(transferSubsystem.TransferShootCMD(transferSubsystem));
         joystick.leftBumper().onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
+
+        new JoystickButton(buttonBoard, 9).onTrue(transferSubsystem.TransferShootCMD(transferSubsystem));
+        new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
         joystick.rightStick().onTrue(turretLeftSubsystem.setTurretPosCMD(0));
         joystick.leftStick().onTrue(turretLeftSubsystem.setTurretPosCMD(89));
@@ -137,9 +154,13 @@ public class RobotContainer {
         joystick.a().onTrue(turretLeftSubsystem.resetOffsetCMD());
 
         joystick.x().onTrue(new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem));
+        new JoystickButton(buttonBoard, 3).onTrue(new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem));
+
+        joystick.x().onFalse(turretLeftSubsystem.setTurretPosCMD(0));
+        joystick.x().onFalse(shooterLeftSubsystem.SetVelocityCMD(0));
+
 
         joystick.y().onTrue(new InstantCommand(()->drivetrain.resetRotation(new Rotation2d(0))));
-
 
 
     }
