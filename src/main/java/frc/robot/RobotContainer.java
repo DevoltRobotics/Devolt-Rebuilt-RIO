@@ -14,14 +14,19 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -38,6 +43,8 @@ import frc.robot.Subsystems.TurretCoordinator;
 import frc.robot.Subsystems.TurretSubsystem;
 
 public class RobotContainer {
+    private final SendableChooser<Command> autoChooser;
+
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(2).in(RadiansPerSecond); // 3/4 of a rotation per second max
                                                                                    // angular velocity
@@ -47,8 +54,7 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    // private final SwerveRequest.PointWheelsAt point = new
-    // SwerveRequest.PointWheelsAt();
+
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -85,7 +91,21 @@ public class RobotContainer {
             TurretCoordinator.Side.LEFT,
             TurretsPos.RightTurretOffset);
 
+         
+
     public RobotContainer() {
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
+        NamedCommands.registerCommand("grab", new ParallelDeadlineGroup(new WaitCommand(3), intakeSubsystem.pivotDownCMD(), intakeSubsystem.IntakeinCMD(intakeSubsystem)));
+        NamedCommands.registerCommand("intakeup", intakeSubsystem.pivotUpCMD());
+        NamedCommands.registerCommand("intakedown", intakeSubsystem.pivotDownSafeCMD());
+        NamedCommands.registerCommand("shoot", new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem));
+        NamedCommands.registerCommand("reset", new ParallelCommandGroup(
+                turretLeftSubsystem.setTurretPosCMD(0), shooterLeftSubsystem.SetVelocityCMD(0),
+                turretRightSubsystem.setTurretPosCMD(0), shooterRightSubsystem.SetVelocityCMD(0)));
+
         turretLeftConfig
                 .inverted(true)
                 .idleMode(IdleMode.kBrake);
@@ -217,14 +237,19 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 3)
                 .onTrue(new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem));
 
-        joystick.x().onFalse(turretLeftSubsystem.setTurretPosCMD(0));
-        joystick.x().onFalse(turretRightSubsystem.setTurretPosCMD(0));
+        joystick.x().onFalse(new ParallelCommandGroup(
+                turretLeftSubsystem.setTurretPosCMD(0),
+                turretRightSubsystem.setTurretPosCMD(0)));
+        new JoystickButton(buttonBoard, 3).onFalse(
+                new ParallelCommandGroup(
+                        turretLeftSubsystem.setTurretPosCMD(0),
+                        turretRightSubsystem.setTurretPosCMD(0)));
 
         joystick.y().onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d(0))));
 
     }
 
     public Command getAutonomousCommand() {
-        return Commands.print("No autonomous command configured");
+        return autoChooser.getSelected();
     }
 }
