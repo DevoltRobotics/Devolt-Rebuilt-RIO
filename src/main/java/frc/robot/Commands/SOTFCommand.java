@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,7 +29,7 @@ public class SOTFCommand extends Command {
   double Goal_X_Red = 11.920;
   double Goal_Y_Red = 4.035;
 
-  double Goal_X_Blue = 4.634;
+  double Goal_X_Blue = 4.6;
   double Goal_Y_Blue = 4.035;
 
   double Goal_X = 11.920;
@@ -86,6 +87,9 @@ public class SOTFCommand extends Command {
     Logger.recordOutput("Chasis speed X", speeds.vxMetersPerSecond);
     Logger.recordOutput("Chasis speed y", speeds.vyMetersPerSecond);
     Logger.recordOutput("Chasis speed vamg", Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond));
+
+
+    Logger.recordOutput("SOTF/Hub Pos", new Pose2d(new Translation2d(Goal_X, Goal_Y), new Rotation2d(0)));
 
 
 

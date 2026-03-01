@@ -209,8 +209,8 @@ public class RobotContainer {
 
         Trigger povUp = new Trigger(() -> joystick.getHID().getPOV() == 1);
         // Trigger povDown = new Trigger(() -> joystick.getHID().getPOV() == 4);
-        Trigger povRight = new Trigger(() -> joystick.getHID().getPOV() == 2);
-        Trigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
+        //Trigger povRight = new Trigger(() -> joystick.getHID().getPOV() == 2);
+        //rigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
 
         joystick.pov(0).onTrue(intakeSubsystem.pivotUpCMD()); // no estuvo detectando el POV de xbox, esta forma si jala
         povUp.onTrue(intakeSubsystem.pivotUpCMD());
@@ -223,10 +223,6 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
         joystick.rightStick().onTrue(turretLeftSubsystem.setTurretPosCMD(0));
-        joystick.leftStick().onTrue(turretLeftSubsystem.setTurretPosCMD(89));
-
-        povRight.onTrue(shooterLeftSubsystem.SetVelocityCMD(100));
-        povLeft.onTrue(shooterRightSubsystem.SetVelocityCMD(17));
 
         joystick.a().onTrue(turretLeftSubsystem.resetOffsetCMD());
 
@@ -239,11 +235,15 @@ public class RobotContainer {
 
         joystick.x().onFalse(new ParallelCommandGroup(
                 turretLeftSubsystem.setTurretPosCMD(0),
-                turretRightSubsystem.setTurretPosCMD(0)));
+                turretRightSubsystem.setTurretPosCMD(0),
+                shooterLeftSubsystem.SetVelocityCMD(0),
+                shooterRightSubsystem.SetVelocityCMD(0)));
         new JoystickButton(buttonBoard, 3).onFalse(
                 new ParallelCommandGroup(
                         turretLeftSubsystem.setTurretPosCMD(0),
-                        turretRightSubsystem.setTurretPosCMD(0)));
+                        turretRightSubsystem.setTurretPosCMD(0),
+                        shooterLeftSubsystem.SetVelocityCMD(0),
+                        shooterRightSubsystem.SetVelocityCMD(0)));
 
         joystick.y().onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d(0))));
 
