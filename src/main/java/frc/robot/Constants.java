@@ -1,6 +1,8 @@
 package frc.robot;
 
 
+import com.ctre.phoenix6.CANBus;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,6 +20,8 @@ public class Constants {
         public static final Translation2d RightTurretOffset = new Translation2d(0.165, -0.152); 
 
     }
+
+    public static final CANBus canivore = new CANBus("Canivore");
 
     public static final class CANId {
         public static final class CAN_Swerve{

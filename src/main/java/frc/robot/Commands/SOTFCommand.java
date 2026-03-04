@@ -26,14 +26,17 @@ public class SOTFCommand extends Command {
   ShooterSubsystem shooter;
   TurretSubsystem turret;
 
-  double Goal_X_Red = 11.920;
-  double Goal_Y_Red = 4.035;
+  public static final double Goal_X_Red = 11.920;
+  public static final double Goal_Y_Red = 4.035;
 
-  double Goal_X_Blue = 4.6;
-  double Goal_Y_Blue = 4.035;
+  public static final double Goal_X_Blue = 4.6;
+  public static final double Goal_Y_Blue = 4.035;
 
   double Goal_X = 11.920;
   double Goal_Y = 4.035;
+
+  double yOffstet = 0;
+
 
   private boolean getAlliance = false;
 
@@ -43,11 +46,13 @@ public class SOTFCommand extends Command {
   public SOTFCommand(
       CommandSwerveDrivetrain drivetrain,
       ShooterSubsystem shooterSubsystem,
-      TurretSubsystem turretSubsystem) {
+      TurretSubsystem turretSubsystem,
+      double offset) {
     this.drivetrain = drivetrain;
     this.shooter = shooterSubsystem;
     this.turret = turretSubsystem;
     addRequirements(shooter, turret);
+    yOffstet = offset;
   }
 
   @Override
@@ -66,11 +71,11 @@ public class SOTFCommand extends Command {
     if (alliance.isPresent() && !getAlliance) {
       if (alliance.get() == Alliance.Red) {
         Goal_X = Goal_X_Red;
-        Goal_Y = Goal_Y_Red;
+        Goal_Y = Goal_Y_Red - yOffstet;
         getAlliance = true;
       } else if (alliance.get() == Alliance.Blue) {
         Goal_X = Goal_X_Blue;
-        Goal_Y = Goal_Y_Blue;
+        Goal_Y = Goal_Y_Blue + yOffstet;
         getAlliance = true;
       } else {
         Goal_X = Goal_X_Red;
@@ -83,18 +88,8 @@ public class SOTFCommand extends Command {
     Translation2d rotatedTurretOffset = turret.turretOffset.rotateBy(pose.getRotation());
     Translation2d turretFieldPos = pose.getTranslation().plus(rotatedTurretOffset);
 
-    Logger.recordOutput("rotatedTurretOffset", rotatedTurretOffset);
-    Logger.recordOutput("Chasis speed X", speeds.vxMetersPerSecond);
-    Logger.recordOutput("Chasis speed y", speeds.vyMetersPerSecond);
-    Logger.recordOutput("Chasis speed vamg", Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond));
-
-
-    Logger.recordOutput("SOTF/Hub Pos", new Pose2d(new Translation2d(Goal_X, Goal_Y), new Rotation2d(0)));
-
-
-
-
-    Logger.recordOutput(turret.getName() + "/SOTF/turretFieldPos", new Pose2d(turretFieldPos, pose.getRotation().plus(turret.getAngle())));
+    Logger.recordOutput(turret.getName() + "/SOTF/HubPos", new Pose2d(new Translation2d(Goal_X, Goal_Y), new Rotation2d(0)));
+    Logger.recordOutput(turret.getName() + "/SOTF/TurretFieldPos", new Pose2d(turretFieldPos, pose.getRotation().plus(turret.getAngle())));
 
     ShooterResult result = ShooterController.calculate(
         turretFieldPos,

@@ -15,7 +15,6 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,8 +37,8 @@ public class TurretSubsystem extends SubsystemBase {
 
   public final Translation2d turretOffset;
 
-  private final TurretCoordinator coordinator;
-  private final TurretCoordinator.Side side;
+  //private final TurretCoordinator coordinator;
+  //private final TurretCoordinator.Side side;
 
   private final PIDController turretPidController = new PIDController(.01, 0, 0);
 
@@ -59,7 +58,7 @@ public class TurretSubsystem extends SubsystemBase {
   private double commandedSetpointDeg = 0.0;
 
   // Limits (degrees)
-  private double upperLimitDeg = 250.0;
+  private double upperLimitDeg = 270.0;
   private double lowerLimitDeg = -90.0;
 
   // ---------------- Mechanism2d ----------------
@@ -107,8 +106,8 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor = motor;
     this.turretOffset = turretOffset;
 
-    this.coordinator = coordinator;
-    this.side = side;
+    //this.coordinator = coordinator;
+    //this.side = side;
     
     setName("TurretSubsystem-" + side.name());
 
@@ -123,15 +122,15 @@ public class TurretSubsystem extends SubsystemBase {
     turretRelativePosDeg = turretMotor.getEncoder().getPosition() - turretOffsetEnc;
 
     // 2) Ask coordinator for the REAL safe setpoint (handles collision + limit-safe target representation)
-    Rotation2d current = Rotation2d.fromDegrees(turretRelativePosDeg);
+    //Rotation2d current = Rotation2d.fromDegrees(turretRelativePosDeg);
     Rotation2d requested = Rotation2d.fromDegrees(desiredAngleDeg);
 
-    Rotation2d realSetpoint = coordinator.intentToRotate(
+    Rotation2d realSetpoint = requested; /*coordinator.intentToRotate(
         side,
         requested,
         current,
         turretMotor.getEncoder().getVelocity()
-    );
+    );*/
 
     commandedSetpointDeg = realSetpoint.getDegrees();
 
@@ -139,10 +138,8 @@ public class TurretSubsystem extends SubsystemBase {
     turretPidController.setSetpoint(commandedSetpointDeg);
     double pidOut = turretPidController.calculate(turretRelativePosDeg);
 
-    // 4) Clamp motor output
     turretOut = MathUtil.clamp(pidOut, -0.4, 0.4);
 
-    // 5) Hard limit enforcement (never drive past limits)
     if (turretRelativePosDeg >= upperLimitDeg && turretOut > 0) {
       turretOut = 0;
     }
@@ -159,12 +156,12 @@ public class TurretSubsystem extends SubsystemBase {
     upperLimitLigament.setAngle(upperLimitDeg);
     lowerLimitLigament.setAngle(lowerLimitDeg);
 
-    SmartDashboard.putNumber(getName() + "/RelPosDeg", turretRelativePosDeg);
-    SmartDashboard.putNumber(getName() + "/DesiredDeg", desiredAngleDeg);
-    SmartDashboard.putNumber(getName() + "/CmdSetpointDeg", commandedSetpointDeg);
-    SmartDashboard.putNumber(getName() + "/Out", turretOut);
-    SmartDashboard.putNumber(getName() + "/LowerLimitDeg", lowerLimitDeg);
-    SmartDashboard.putNumber(getName() + "/UpperLimitDeg", upperLimitDeg);
+    Logger.recordOutput(getName() + "/RelPosDeg", turretRelativePosDeg);
+    Logger.recordOutput(getName() + "/DesiredDeg", desiredAngleDeg);
+    Logger.recordOutput(getName() + "/CmdSetpointDeg", commandedSetpointDeg);
+    Logger.recordOutput(getName() + "/Out", turretOut);
+    Logger.recordOutput(getName() + "/LowerLimitDeg", lowerLimitDeg);
+    Logger.recordOutput(getName() + "/UpperLimitDeg", upperLimitDeg);
   }
 
   // ---------------- Public API ----------------
