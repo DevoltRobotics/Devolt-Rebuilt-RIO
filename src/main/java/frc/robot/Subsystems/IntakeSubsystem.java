@@ -33,7 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
   private TalonFX rollerMotor = new TalonFX(CAN_Intake.IntakeCan, CANBus.roboRIO());
   private SparkMax pivot = new SparkMax(CAN_Intake.PivotCan, MotorType.kBrushless);
 
-  private double desiredPosition = 0.3;
+  private double desiredPosition = 0;
 
   private PIDController pivotPID = new PIDController(3, 0, 0);
 
@@ -145,6 +145,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public Command pivotUpCMD() {
     return new InstantCommand(() -> setPosition(intakeUpPos), this);
+  }
+
+  
+  public Command pivotzeroCMD() {
+    return new InstantCommand(() -> setPosition(0), this);
   }
 
   public Command IntakeinCMD(IntakeSubsystem intakeSubsystem) {
