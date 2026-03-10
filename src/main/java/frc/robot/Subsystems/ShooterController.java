@@ -38,15 +38,15 @@ public class ShooterController {
     private static final double MAX_DISTANCE = 9.3;
 
     static {
-        SHOOTER_MAP.put(2.0,  new ShooterParams(45.0, 0.6));
-        SHOOTER_MAP.put(2.5,  new ShooterParams(46.0, 0.83));
-        SHOOTER_MAP.put(3.0,  new ShooterParams(48.0, 0.88));
-        SHOOTER_MAP.put(3.5,  new ShooterParams(50.8, 0.93));
-        SHOOTER_MAP.put(4.0,  new ShooterParams(55.5, 1.08));
-        SHOOTER_MAP.put(4.5,  new ShooterParams(59.5, 1.16));
-        SHOOTER_MAP.put(5.0,  new ShooterParams(63.7, 1.24));
-        SHOOTER_MAP.put(5.5,  new ShooterParams(66.4, 1.34));
-        SHOOTER_MAP.put(6.0,  new ShooterParams(69.4, 1.53));
+        SHOOTER_MAP.put(2.0,  new ShooterParams(47.8, 0.6));
+        SHOOTER_MAP.put(2.5,  new ShooterParams(48.8, 0.83));
+        SHOOTER_MAP.put(3.0,  new ShooterParams(49.8, 0.88));
+        SHOOTER_MAP.put(3.5,  new ShooterParams(51.8, 0.93));
+        SHOOTER_MAP.put(4.0,  new ShooterParams(55.8, 1.08));
+        SHOOTER_MAP.put(4.5,  new ShooterParams(59.8, 1.16));
+        SHOOTER_MAP.put(5.0,  new ShooterParams(64.0, 1.24));
+        SHOOTER_MAP.put(5.5,  new ShooterParams(66.8, 1.34));
+        SHOOTER_MAP.put(6.0,  new ShooterParams(69.8, 1.53));
         SHOOTER_MAP.put(9.3,  new ShooterParams(100.0, 2.18));
 
         // Fill distance interpolation map
@@ -122,7 +122,9 @@ public class ShooterController {
     // Convierte velocidad->distancia efectiva->RPS usando tu LUT existente
     double effectiveDistance = velocityToEffectiveDistance(requiredVelocity1D);
     double clampedEff = MathUtil.clamp(effectiveDistance, MIN_DISTANCE, MAX_DISTANCE);
-    double requiredRps = SHOOTER_INTERP_MAP.get(clampedEff).rps;
+    double requiredRpsSOTF = SHOOTER_INTERP_MAP.get(clampedEff).rps;
+    double requiredRps = SHOOTER_INTERP_MAP.get(clampedDist).rps;
+
     // ---------------------------------------------------------
 
     return new ShooterResult(turretFieldAngle, requiredRps);

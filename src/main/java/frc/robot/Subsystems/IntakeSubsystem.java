@@ -54,11 +54,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
   private double PivotOut = 0;
 
-  public double intakeUpPos = 0.17;
+  public double intakeUpPos = 0.08;
 
-  public double intakeDownPos = 0.35;
+  public double intakeDownPos = 0.326;
 
-  public double intakeDownSafePos = 0.3;
+  public double intakeDownSafePos = 0.28;
 
   double tolerance = 0.004;
 
@@ -154,7 +154,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public Command IntakeinCMD(IntakeSubsystem intakeSubsystem) {
     return new InstantCommand(() -> {
-      intakeSubsystem.setRollerSpeed(-0.7);
+      intakeSubsystem.setRollerSpeed(-0.85);
     });
   }
 

@@ -379,7 +379,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
                 
             if (!rejectUpdatef){
-                addVisionMeasurement(mt2f.pose, mt2f.timestampSeconds);
+               // addVisionMeasurement(mt2f.pose, mt2f.timestampSeconds);
 
         }
     }

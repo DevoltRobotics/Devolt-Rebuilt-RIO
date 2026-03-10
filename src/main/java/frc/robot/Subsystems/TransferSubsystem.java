@@ -6,7 +6,7 @@ package frc.robot.Subsystems;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -33,7 +33,8 @@ public class TransferSubsystem extends SubsystemBase {
   private SparkMax beltMotor = new SparkMax(CAN_Intake.TransferCan, MotorType.kBrushless);
 
   private TalonFX kickerMotor = new TalonFX(CAN_Shooter.KickerCan, CANBus.roboRIO());
-  private DutyCycleOut Power = new DutyCycleOut(0);
+  private VelocityVoltage Velocity = new VelocityVoltage(0);
+  private double desiredVelocity = 0;
 
   private final TalonFXConfiguration kickerConfig = new TalonFXConfiguration();
   private final SparkMaxConfig beltConfig = new SparkMaxConfig();
@@ -47,9 +48,11 @@ public class TransferSubsystem extends SubsystemBase {
 
     kickerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     kickerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
     kickerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     kickerConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    kickerConfig.Slot0.kP = 0.05;
+    kickerConfig.Slot0.kV = 0.096;
+    kickerConfig.Slot0.kS = 0;
 
     kickerMotor.getConfigurator().apply(kickerConfig);
 
@@ -57,12 +60,12 @@ public class TransferSubsystem extends SubsystemBase {
 
   public void setSpeeds(double beltSpeed, double kickerSpeed) {
     beltMotor.set(beltSpeed);
-    kickerMotor.setControl(Power.withOutput(kickerSpeed));
+    desiredVelocity = kickerSpeed;
   }
 
   public Command TransferShootCMD(TransferSubsystem transferSubsystem) {
     return new InstantCommand(() -> {
-      transferSubsystem.setSpeeds(1, 1);
+      transferSubsystem.setSpeeds(1, 120);
     });
   }
 
@@ -76,5 +79,6 @@ public class TransferSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("leftTransfer", laserLeft.get());
     SmartDashboard.putBoolean("rightTransfer", laserRight.get());
+    kickerMotor.setControl(Velocity.withVelocity(desiredVelocity));
   }
 }

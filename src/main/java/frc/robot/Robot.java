@@ -7,6 +7,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.LimelightConstants;
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -30,8 +31,12 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
+    boolean apriltagPresent = 
+    (LimelightHelpers.getTV(LimelightConstants.backLimelightName)||LimelightHelpers.getTV(LimelightConstants.frontLimelightName))?
+    true : false;
     CommandScheduler.getInstance().run();
       SmartDashboard.putNumber("Driver/POV", m_robotContainer.joystick.getHID().getPOV());
+      SmartDashboard.putBoolean("ApriltagPresent", apriltagPresent);
 
 
     /*

@@ -74,22 +74,21 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "BL2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "grab"
-                }
-              }
-            ]
+            "name": "grabPosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "grabOn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL2"
           }
         },
         {
@@ -117,7 +116,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 8.0
+                  "waitTime": 7.0
                 }
               },
               {
@@ -145,7 +144,79 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakeup"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakedown"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.8
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakeup"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakedown"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.8
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakeup"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakedown"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.8
                       }
                     },
                     {
@@ -170,6 +241,48 @@
           "type": "named",
           "data": {
             "name": "reset"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "grabPosition"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "grabOn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopintake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "intakedown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL3"
           }
         }
       ]

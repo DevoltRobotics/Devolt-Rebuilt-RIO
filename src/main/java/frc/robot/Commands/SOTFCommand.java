@@ -36,6 +36,7 @@ public class SOTFCommand extends Command {
   double Goal_Y = 4.035;
 
   double yOffstet = 0;
+  double xOffset = 0;
 
 
   private boolean getAlliance = false;
@@ -47,12 +48,14 @@ public class SOTFCommand extends Command {
       CommandSwerveDrivetrain drivetrain,
       ShooterSubsystem shooterSubsystem,
       TurretSubsystem turretSubsystem,
-      double offset) {
+      double offsety,
+      double offsetx) {
     this.drivetrain = drivetrain;
     this.shooter = shooterSubsystem;
     this.turret = turretSubsystem;
     addRequirements(shooter, turret);
-    yOffstet = offset;
+    yOffstet = offsety;
+    xOffset = offsetx;
   }
 
   @Override
@@ -70,11 +73,11 @@ public class SOTFCommand extends Command {
 
     if (alliance.isPresent() && !getAlliance) {
       if (alliance.get() == Alliance.Red) {
-        Goal_X = Goal_X_Red;
+        Goal_X = Goal_X_Red + xOffset;
         Goal_Y = Goal_Y_Red - yOffstet;
         getAlliance = true;
       } else if (alliance.get() == Alliance.Blue) {
-        Goal_X = Goal_X_Blue;
+        Goal_X = Goal_X_Blue - xOffset;
         Goal_Y = Goal_Y_Blue + yOffstet;
         getAlliance = true;
       } else {
@@ -95,7 +98,7 @@ public class SOTFCommand extends Command {
         turretFieldPos,
         new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
         new Translation2d(Goal_X, Goal_Y),
-        dt
+        avgDt
     );
 
     shooter.setVelocity(result.requiredRps());

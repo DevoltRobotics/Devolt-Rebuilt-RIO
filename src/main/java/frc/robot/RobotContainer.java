@@ -103,12 +103,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("transferon", transferSubsystem.TransferShootCMD(transferSubsystem));
         NamedCommands.registerCommand("transferoff", transferSubsystem.StopTransferCMD(transferSubsystem));
         NamedCommands.registerCommand("shoot", new ParallelCommandGroup(
-                                                        new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0),
-                                                        new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0)));
+                                                        new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
+                                                        new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)));
         NamedCommands.registerCommand("reset", new ParallelCommandGroup(
                 turretLeftSubsystem.setTurretPosCMD(0), shooterLeftSubsystem.SetVelocityCMD(0),
                 turretRightSubsystem.setTurretPosCMD(0), shooterRightSubsystem.SetVelocityCMD(0)));
 
+        NamedCommands.registerCommand("grabPosition", new InstantCommand(()->intakeSubsystem.setPosition(intakeSubsystem.intakeDownPos)));
+        NamedCommands.registerCommand("grabOn", intakeSubsystem.IntakeinCMD(intakeSubsystem));
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -233,22 +235,22 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
         joystick.x().onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0)
+                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
+                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)
         ));
         new JoystickButton(buttonBoard, 3).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0)
+                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
+                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)
         ));
 
         new JoystickButton(buttonBoard, 2).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, -2),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, -2)
+                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 2, 1),
+                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 2,1)
         ));
 
         new JoystickButton(buttonBoard, 4).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 2),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 2)
+                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, -2, 1),
+                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, -2, 1)
         ));
 
         joystick.x().onFalse(new ParallelCommandGroup(

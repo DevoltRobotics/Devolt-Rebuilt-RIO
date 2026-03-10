@@ -70,4 +70,8 @@ public class ShooterSubsystem extends SubsystemBase {
     });
   }
 
+  public double getVelocity(){
+    return Lflywheel.getVelocity().getValueAsDouble();
+  }
+
 }
