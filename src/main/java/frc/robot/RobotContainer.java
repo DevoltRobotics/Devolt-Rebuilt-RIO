@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Commands.AutoShootCommand;
 import frc.robot.Commands.SOTFCommand;
 import frc.robot.Constants.CANId;
 import frc.robot.Constants.TurretsPos;
@@ -235,8 +236,7 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
         joystick.x().onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)
+               new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 0, 0)
         ));
         new JoystickButton(buttonBoard, 3).onTrue(new ParallelCommandGroup(
                 new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),

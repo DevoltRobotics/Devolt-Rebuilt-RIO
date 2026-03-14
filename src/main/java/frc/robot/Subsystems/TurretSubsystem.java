@@ -184,6 +184,10 @@ public class TurretSubsystem extends SubsystemBase {
   public void resetOffset() {
     turretOffsetEnc = turretMotor.getEncoder().getPosition();
   }
+  public boolean IsReadyToShoot(){
+    return (Math.abs(turretPidController.getError()) < 2);
+  }
+
 
   // ---------------- Commands ----------------
 
