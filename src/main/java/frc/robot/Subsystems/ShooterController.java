@@ -6,7 +6,10 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -34,11 +37,11 @@ public class ShooterController {
     private static final NavigableMap<Double, Double> VELOCITY_TO_DISTANCE = new TreeMap<>();
 
     // LUT bounds (set to your min/max distance keys)
-    private static final double MIN_DISTANCE = 2.0;
+    private static final double MIN_DISTANCE = 1.71;
     private static final double MAX_DISTANCE = 9.3;
 
     static {
-        SHOOTER_MAP.put(2.0,  new ShooterParams(47.8, 0.6));
+        SHOOTER_MAP.put(1.71,  new ShooterParams(47.8, 1));
         SHOOTER_MAP.put(2.5,  new ShooterParams(48.8, 0.83));
         SHOOTER_MAP.put(3.0,  new ShooterParams(49.8, 0.88));
         SHOOTER_MAP.put(3.5,  new ShooterParams(51.8, 0.93));
@@ -68,7 +71,8 @@ public class ShooterController {
         Translation2d robotPosition,
         Translation2d robotVelocity,
         Translation2d goalPosition,
-        double latencyCompensation) {
+        double latencyCompensation
+    ) {
 
     // 1) Future position (optional)
     Translation2d futurePos = robotPosition.plus(robotVelocity.times(latencyCompensation));
@@ -79,7 +83,7 @@ public class ShooterController {
 
     // Guard
     if (distance < 1e-6) {
-        return new ShooterResult(new Rotation2d(), 0.0);
+        return new ShooterResult(new Rotation2d(), 0.0, 0.0);
     }
 
     // 3) Clamp distance to LUT range & get baseline params from LUT
@@ -127,7 +131,7 @@ public class ShooterController {
 
     // ---------------------------------------------------------
 
-    return new ShooterResult(turretFieldAngle, requiredRps);
+    return new ShooterResult(turretFieldAngle, requiredRps, distance);
 }
 
     /**
@@ -167,5 +171,5 @@ public class ShooterController {
 
     public static record ShooterParams(double rps, double timeOfFlight) {}
 
-    public static record ShooterResult(Rotation2d turretFieldAngle, double requiredRps) {}
+    public static record ShooterResult(Rotation2d turretFieldAngle, double requiredRps, double distanceToGoal) {}
 }

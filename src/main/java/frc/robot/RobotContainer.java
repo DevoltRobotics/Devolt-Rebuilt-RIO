@@ -6,6 +6,11 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -73,23 +78,36 @@ public class RobotContainer {
     private SparkMaxConfig turretLeftConfig = new SparkMaxConfig();
     public final SparkMax turretLeftMotor = new SparkMax(CANId.CAN_Shooter.LTurretCan, MotorType.kBrushless);
 
+
+      public final TalonFXConfiguration LFlywheelConfig = new TalonFXConfiguration();
+
+        public TalonFX Lflywheel = new TalonFX(CAN_Shooter.LFlywheelCan, CANBus.roboRIO());
+
+
+
     public final ShooterSubsystem shooterLeftSubsystem = new ShooterSubsystem(CAN_Shooter.LFlywheelCan,
-            drivetrain.getState().Pose);
+            drivetrain.getState().Pose,Lflywheel);
     public final TurretSubsystem turretLeftSubsystem = new TurretSubsystem(
             turretLeftMotor,
             turretCoordinator,
-            TurretCoordinator.Side.RIGHT,
+            TurretCoordinator.Side.LEFT,
             TurretsPos.LeftTurretOffset);
+
+            
 
     private SparkMaxConfig turretRightConfig = new SparkMaxConfig();
     public final SparkMax turretRightMotor = new SparkMax(CANId.CAN_Shooter.RTurretCan, MotorType.kBrushless);
 
+    public final TalonFXConfiguration RFlywheelConfig = new TalonFXConfiguration();
+
+    public TalonFX Rflywheel = new TalonFX(CAN_Shooter.RFlywheelCan, CANBus.roboRIO());
+
     public final ShooterSubsystem shooterRightSubsystem = new ShooterSubsystem(CAN_Shooter.RFlywheelCan,
-            drivetrain.getState().Pose);
+            drivetrain.getState().Pose,Rflywheel);
     public final TurretSubsystem turretRightSubsystem = new TurretSubsystem(
             turretRightMotor,
             turretCoordinator,
-            TurretCoordinator.Side.LEFT,
+            TurretCoordinator.Side.RIGHT,
             TurretsPos.RightTurretOffset);
 
          
@@ -117,11 +135,29 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
        
+
+    LFlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    LFlywheelConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    LFlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    LFlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    LFlywheelConfig.Slot0.kP = 0.173;
+    LFlywheelConfig.Slot0.kV = 0.115;
+    LFlywheelConfig.Slot0.kS = 0.4;
+    Lflywheel.getConfigurator().apply(LFlywheelConfig);
+
+    RFlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    RFlywheelConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    RFlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+    RFlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    RFlywheelConfig.Slot0.kP = 0.15;
+    RFlywheelConfig.Slot0.kV = 0.115;
+    RFlywheelConfig.Slot0.kS = 0.4;
+    Rflywheel.getConfigurator().apply(RFlywheelConfig);
+
         turretLeftConfig
                 .inverted(true)
                 .idleMode(IdleMode.kBrake);
         turretLeftConfig.encoder
-                // Your factor: 7.2 deg per motor-encoder unit
                 .positionConversionFactor(7.2)
                 .velocityConversionFactor(7.2);
 
@@ -131,7 +167,6 @@ public class RobotContainer {
                 .inverted(true)
                 .idleMode(IdleMode.kBrake);
         turretRightConfig.encoder
-                // Your factor: 7.2 deg per motor-encoder unit
                 .positionConversionFactor(7.2)
                 .velocityConversionFactor(7.2);
 
@@ -224,7 +259,7 @@ public class RobotContainer {
         //rigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
 
         joystick.pov(0).onTrue(intakeSubsystem.pivotUpCMD()); // no estuvo detectando el POV de xbox, esta forma si jala
-        joystick.pov(90).onTrue(intakeSubsystem.pivotzeroCMD()); // no estuvo detectando el POV de xbox, esta forma si jala
+        joystick.pov(90).onTrue(shooterLeftSubsystem.SetVelocityCMD(44)); // no estuvo detectando el POV de xbox, esta forma si jala
 
         povUp.onTrue(intakeSubsystem.pivotUpCMD());
         new JoystickButton(buttonBoard, 7).onTrue(intakeSubsystem.pivotUpCMD());
@@ -235,9 +270,9 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 9).onTrue(transferSubsystem.TransferShootCMD(transferSubsystem));
         new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
-        joystick.x().onTrue(new ParallelCommandGroup(
+        joystick.x().onTrue(
                new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 0, 0)
-        ));
+        );
         new JoystickButton(buttonBoard, 3).onTrue(new ParallelCommandGroup(
                 new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
                 new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)

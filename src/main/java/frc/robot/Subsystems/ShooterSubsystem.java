@@ -35,21 +35,10 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
   /** Creates a new ShooterSubsystem. */
-  public ShooterSubsystem(int canId, Pose2d positionInRobot) {
-    Lflywheel = new TalonFX(canId, CANBus.roboRIO());
-
-    FlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    FlywheelConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-    FlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    FlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    FlywheelConfig.Slot0.kP = 0.15;
-    FlywheelConfig.Slot0.kV = 0.115;
-    FlywheelConfig.Slot0.kS = 0.4;
-    Lflywheel.getConfigurator().apply(FlywheelConfig);
-
+  public ShooterSubsystem(int canId, Pose2d positionInRobot,TalonFX motor) {
+    Lflywheel = motor;
     this.positionInRobot = positionInRobot;
     
-
     setName("Turret" + canId);
   }
 

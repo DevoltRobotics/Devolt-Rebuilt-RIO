@@ -94,12 +94,16 @@ public class SOTFCommand extends Command {
     Logger.recordOutput(turret.getName() + "/SOTF/HubPos", new Pose2d(new Translation2d(Goal_X, Goal_Y), new Rotation2d(0)));
     Logger.recordOutput(turret.getName() + "/SOTF/TurretFieldPos", new Pose2d(turretFieldPos, pose.getRotation().plus(turret.getAngle())));
 
+
     ShooterResult result = ShooterController.calculate(
         turretFieldPos,
         new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
         new Translation2d(Goal_X, Goal_Y),
         avgDt
     );
+
+    
+    Logger.recordOutput(turret.getName() + "/SOTF/DistanceToGoal", result.distanceToGoal());
 
     shooter.setVelocity(result.requiredRps());
     turret.setAngle(result.turretFieldAngle().minus(pose.getRotation()).getDegrees());

@@ -50,10 +50,10 @@ public class Constants {
 
         public static final class CAN_Shooter{
             public static final int LTurretCan = 18;
-            public static final int RFlywheelCan = 19;
+            public static final int RFlywheelCan = 22;
             public static final int KickerCan = 20;
             public static final int RTurretCan = 21;
-            public static final int LFlywheelCan = 22;
+            public static final int LFlywheelCan = 19;
         }
     }
 

@@ -1,6 +1,5 @@
 package frc.robot.Commands;
 
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Subsystems.CommandSwerveDrivetrain;

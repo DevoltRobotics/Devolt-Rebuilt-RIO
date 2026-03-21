@@ -58,8 +58,8 @@ public class TurretSubsystem extends SubsystemBase {
   private double commandedSetpointDeg = 0.0;
 
   // Limits (degrees)
-  private double upperLimitDeg = 270.0;
-  private double lowerLimitDeg = -90.0;
+  private double upperLimitDeg = 180.0;
+  private double lowerLimitDeg = -180.0;
 
   // ---------------- Mechanism2d ----------------
   private final LoggedMechanism2d mech = new LoggedMechanism2d(3, 3);
@@ -85,14 +85,14 @@ public class TurretSubsystem extends SubsystemBase {
   private final LoggedMechanismLigament2d upperLimitLigament = root.append(new LoggedMechanismLigament2d(
       "UpperLimit",
       1.35,
-      90,
+      180,
       2,
       new Color8Bit(Color.kGreen)));
 
   private final LoggedMechanismLigament2d lowerLimitLigament = root.append(new LoggedMechanismLigament2d(
       "LowerLimit",
       1.35,
-      -270,
+      -180,
       2,
       new Color8Bit(Color.kOrange)));
   // ------------------------------------------------
@@ -138,7 +138,7 @@ public class TurretSubsystem extends SubsystemBase {
     turretPidController.setSetpoint(commandedSetpointDeg);
     double pidOut = turretPidController.calculate(turretRelativePosDeg);
 
-    turretOut = MathUtil.clamp(pidOut, -0.4, 0.4);
+    turretOut = MathUtil.clamp(pidOut, -0.45, 0.45);
 
     if (turretRelativePosDeg >= upperLimitDeg && turretOut > 0) {
       turretOut = 0;
