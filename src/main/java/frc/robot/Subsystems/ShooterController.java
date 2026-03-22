@@ -39,11 +39,11 @@ public class ShooterController {
     private static final double MAX_DISTANCE = 9.3;
 
     static {
-        SHOOTER_MAP.put(1.718,  new ShooterParams(32, 0.95));
-        SHOOTER_MAP.put(2.21,  new ShooterParams(36, 1.05));
-        SHOOTER_MAP.put(2.81,  new ShooterParams(41, 1.11));
-        SHOOTER_MAP.put(3.295,  new ShooterParams(47, 1.42));
-        SHOOTER_MAP.put(4.0,  new ShooterParams(55.8, 1.08));
+        SHOOTER_MAP.put(1.71,  new ShooterParams(35, 0.95));
+        SHOOTER_MAP.put(2.32,  new ShooterParams(40, 1.05));
+        SHOOTER_MAP.put(2.836,  new ShooterParams(46, 1.11));
+        SHOOTER_MAP.put(3.343,  new ShooterParams(51.5, 1.42));
+        SHOOTER_MAP.put(3.707,  new ShooterParams(58, 1.37));
         SHOOTER_MAP.put(4.5,  new ShooterParams(59.8, 1.16));
         SHOOTER_MAP.put(5.0,  new ShooterParams(64.0, 1.24));
         SHOOTER_MAP.put(5.5,  new ShooterParams(66.8, 1.34));

@@ -148,7 +148,7 @@ public class RobotContainer {
     RFlywheelConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     RFlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     RFlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    RFlywheelConfig.Slot0.kP = 0.15;
+    RFlywheelConfig.Slot0.kP = 0.17;
     RFlywheelConfig.Slot0.kV = 0.115;
     RFlywheelConfig.Slot0.kS = 0.4;
     Rflywheel.getConfigurator().apply(RFlywheelConfig);
@@ -184,16 +184,14 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
+          drivetrain.setDefaultCommand(
 
                 drivetrain.applyRequest(
-                        () -> drive.withVelocityX(joystick.button(6).getAsBoolean() ?
-                                -joystick.getLeftY() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)
-                                 : drivetrain.trenchAllign()[0]) 
+                        () -> drive.withVelocityX(
+                                -joystick.getLeftY() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)) 
                                 .withVelocityY(-joystick.getLeftX() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)) 
-                                .withRotationalRate(joystick.button(6).getAsBoolean() ?
-                                        -joystick.getRightX() * MaxAngularRate
-                                : drivetrain.trenchAllign()[1])
+                                .withRotationalRate(
+                                        -joystick.getRightX() * MaxAngularRate)
                         ));
 
 
@@ -253,7 +251,7 @@ public class RobotContainer {
         //rigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
 
         joystick.pov(0).onTrue(intakeSubsystem.pivotUpCMD()); // no estuvo detectando el POV de xbox, esta forma si jala
-        joystick.pov(90).onTrue(shooterLeftSubsystem.SetVelocityCMD(62)); // no estuvo detectando el POV de xbox, esta forma si jala
+        joystick.pov(90).onTrue(shooterRightSubsystem.SetVelocityCMD(58)); // no estuvo detectando el POV de xbox, esta forma si jala
 
         povUp.onTrue(intakeSubsystem.pivotUpCMD());
         new JoystickButton(buttonBoard, 7).onTrue(intakeSubsystem.pivotUpCMD());
