@@ -403,4 +403,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
     }
 
+    public double[] trenchAllign(){
+        PIDController rotPID = new PIDController(.01, .5, 0);
+        PIDController xPID = new PIDController(.1, .01, 0);
+        rotPID.setSetpoint(Math.abs(getState().Pose.getRotation().getDegrees()) < 90 ?  180 : 0);
+        xPID.setSetpoint(getState().Pose.getX() > 4 ? 7.4 : .6);
+        double[] result = {xPID.calculate(getState().Pose.getX()), rotPID.calculate(getState().Pose.getRotation().getDegrees())};
+        rotPID.close();
+        xPID.close();
+        return result;
+        
+
+    }
+
 }

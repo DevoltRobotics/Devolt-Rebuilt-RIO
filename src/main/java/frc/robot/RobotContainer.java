@@ -36,7 +36,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Commands.AutoShootCommand;
 import frc.robot.Commands.SOTFCommand;
 import frc.robot.Constants.CANId;
 import frc.robot.Constants.TurretsPos;
@@ -186,23 +185,18 @@ public class RobotContainer {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
-                // Drivetrain will execute this command periodically
+
                 drivetrain.applyRequest(
-                        () -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)) // Drive
-                                                                                                                       // forward
-                                                                                                                       // with
-                                                                                                                       // negative
-                                                                                                                       // Y
-                                                                                                                       // (forward)
-                                .withVelocityY(-joystick.getLeftX() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)) // Drive
-                                                                                                                    // left
-                                                                                                                    // with
-                                                                                                                    // negative
-                                                                                                                    // X
-                                                                                                                    // (left)
-                                .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise
-                                                                                            // with negative X (left)
-                ));
+                        () -> drive.withVelocityX(joystick.button(6).getAsBoolean() ?
+                                -joystick.getLeftY() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)
+                                 : drivetrain.trenchAllign()[0]) 
+                                .withVelocityY(-joystick.getLeftX() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8)) 
+                                .withRotationalRate(joystick.button(6).getAsBoolean() ?
+                                        -joystick.getRightX() * MaxAngularRate
+                                : drivetrain.trenchAllign()[1])
+                        ));
+
+
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -259,7 +253,7 @@ public class RobotContainer {
         //rigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
 
         joystick.pov(0).onTrue(intakeSubsystem.pivotUpCMD()); // no estuvo detectando el POV de xbox, esta forma si jala
-        joystick.pov(90).onTrue(shooterLeftSubsystem.SetVelocityCMD(44)); // no estuvo detectando el POV de xbox, esta forma si jala
+        joystick.pov(90).onTrue(shooterLeftSubsystem.SetVelocityCMD(62)); // no estuvo detectando el POV de xbox, esta forma si jala
 
         povUp.onTrue(intakeSubsystem.pivotUpCMD());
         new JoystickButton(buttonBoard, 7).onTrue(intakeSubsystem.pivotUpCMD());
@@ -270,22 +264,19 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 9).onTrue(transferSubsystem.TransferShootCMD(transferSubsystem));
         new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
-        joystick.x().onTrue(
-               new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 0, 0)
-        );
         new JoystickButton(buttonBoard, 3).onTrue(new ParallelCommandGroup(
                 new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
                 new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)
         ));
 
         new JoystickButton(buttonBoard, 2).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 2, 1),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 2,1)
+                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 2, 3),
+                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 2,3)
         ));
 
         new JoystickButton(buttonBoard, 4).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, -2, 1),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, -2, 1)
+                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, -2, 3),
+                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, -2, 3)
         ));
 
         joystick.x().onFalse(new ParallelCommandGroup(

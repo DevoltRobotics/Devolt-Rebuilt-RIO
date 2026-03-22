@@ -6,10 +6,8 @@ import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -41,10 +39,10 @@ public class ShooterController {
     private static final double MAX_DISTANCE = 9.3;
 
     static {
-        SHOOTER_MAP.put(1.71,  new ShooterParams(47.8, 1));
-        SHOOTER_MAP.put(2.5,  new ShooterParams(48.8, 0.83));
-        SHOOTER_MAP.put(3.0,  new ShooterParams(49.8, 0.88));
-        SHOOTER_MAP.put(3.5,  new ShooterParams(51.8, 0.93));
+        SHOOTER_MAP.put(1.718,  new ShooterParams(32, 0.95));
+        SHOOTER_MAP.put(2.21,  new ShooterParams(36, 1.05));
+        SHOOTER_MAP.put(2.81,  new ShooterParams(41, 1.11));
+        SHOOTER_MAP.put(3.295,  new ShooterParams(47, 1.42));
         SHOOTER_MAP.put(4.0,  new ShooterParams(55.8, 1.08));
         SHOOTER_MAP.put(4.5,  new ShooterParams(59.8, 1.16));
         SHOOTER_MAP.put(5.0,  new ShooterParams(64.0, 1.24));

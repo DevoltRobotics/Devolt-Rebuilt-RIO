@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CANId.CAN_Intake;
 import frc.robot.Constants.CANId.CAN_Shooter;
 
@@ -75,10 +77,18 @@ public class TransferSubsystem extends SubsystemBase {
     });
   }
 
+  public Command onWithdelay(double delay){
+    return new SequentialCommandGroup(
+      new WaitCommand(delay),
+      new InstantCommand(()-> setSpeeds(1, 120))
+    );
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("leftTransfer", laserLeft.get());
     SmartDashboard.putBoolean("rightTransfer", laserRight.get());
     kickerMotor.setControl(Velocity.withVelocity(desiredVelocity));
   }
+
 }
