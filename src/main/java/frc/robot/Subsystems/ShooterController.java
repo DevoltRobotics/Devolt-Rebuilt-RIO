@@ -48,7 +48,7 @@ public class ShooterController {
         SHOOTER_MAP.put(4.593,  new ShooterParams(62.0, 1.42));
         SHOOTER_MAP.put(5.2,  new ShooterParams(64, 1.72));
         SHOOTER_MAP.put(5.818,  new ShooterParams(68, 1.79));
-        SHOOTER_MAP.put(9.3,  new ShooterParams(100.0, 2.18));
+       // SHOOTER_MAP.put(9.3,  new ShooterParams(100.0, 2.18));
 
         // Fill distance interpolation map
         for (Entry<Double, ShooterParams> e : SHOOTER_MAP.entrySet()) {
