@@ -59,6 +59,12 @@ public class SOTFCommand extends Command {
   }
 
   @Override
+public void initialize() {
+  lastTime = Timer.getFPGATimestamp();
+  avgDt = 0.02;
+}
+
+  @Override
   public void execute() {
     double now = Timer.getFPGATimestamp();
     double dt = now - lastTime;
@@ -95,11 +101,15 @@ public class SOTFCommand extends Command {
     Logger.recordOutput(turret.getName() + "/SOTF/TurretFieldPos", new Pose2d(turretFieldPos, pose.getRotation().plus(turret.getAngle())));
 
 
-    ShooterResult result = ShooterController.calculate(
-        turretFieldPos,
-        new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond),
-        new Translation2d(Goal_X, Goal_Y),
-        avgDt
+  Translation2d robotRelativeVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+
+  Translation2d fieldRelativeVelocity = robotRelativeVelocity.rotateBy(pose.getRotation());
+
+  ShooterResult result = ShooterController.calculate(
+    turretFieldPos,
+    fieldRelativeVelocity,
+    new Translation2d(Goal_X, Goal_Y),
+    avgDt
     );
 
     

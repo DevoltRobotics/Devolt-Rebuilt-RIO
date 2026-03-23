@@ -257,7 +257,7 @@ public class RobotContainer {
         //rigger povLeft = new Trigger(() -> joystick.getHID().getPOV() == 8);
 
         joystick.pov(0).onTrue(intakeSubsystem.pivotUpCMD()); // no estuvo detectando el POV de xbox, esta forma si jala
-        joystick.pov(90).onTrue(shooterRightSubsystem.SetVelocityCMD(58)); // no estuvo detectando el POV de xbox, esta forma si jala
+        joystick.pov(90).onTrue(shooterRightSubsystem.SetVelocityCMD(52)); // no estuvo detectando el POV de xbox, esta forma si jala
 
         povUp.onTrue(intakeSubsystem.pivotUpCMD());
         new JoystickButton(buttonBoard, 7).onTrue(intakeSubsystem.pivotUpCMD());
