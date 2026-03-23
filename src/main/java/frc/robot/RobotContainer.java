@@ -202,6 +202,12 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
+        //alineacion a trench        
+        joystick.button(8).whileTrue(drivetrain.applyRequest(
+             () -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed * (1 - joystick.getRawAxis(2) * .8))
+                        .withVelocityY(drivetrain.trenchAllign()[0]) 
+                        .withRotationalRate(drivetrain.trenchAllign()[1])));
+
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         /*
          * joystick.b().whileTrue(drivetrain.applyRequest(() ->
