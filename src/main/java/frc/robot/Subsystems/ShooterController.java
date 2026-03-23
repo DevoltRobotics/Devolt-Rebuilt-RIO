@@ -35,19 +35,19 @@ public class ShooterController {
     private static final NavigableMap<Double, Double> VELOCITY_TO_DISTANCE = new TreeMap<>();
 
     // LUT bounds (set to your min/max distance keys)
-    private static final double MIN_DISTANCE = 1.71;
-    private static final double MAX_DISTANCE = 9.3;
+    private static final double MIN_DISTANCE = 1.971;
+    private static final double MAX_DISTANCE = 5.818;
 
     static {
-        SHOOTER_MAP.put(1.71,  new ShooterParams(35, 0.95));
-        SHOOTER_MAP.put(2.32,  new ShooterParams(40, 1.05));
-        SHOOTER_MAP.put(2.836,  new ShooterParams(46, 1.11));
-        SHOOTER_MAP.put(3.343,  new ShooterParams(51.5, 1.42));
-        SHOOTER_MAP.put(3.707,  new ShooterParams(58, 1.37));
-        SHOOTER_MAP.put(4.5,  new ShooterParams(59.8, 1.16));
-        SHOOTER_MAP.put(5.0,  new ShooterParams(64.0, 1.24));
-        SHOOTER_MAP.put(5.5,  new ShooterParams(66.8, 1.34));
-        SHOOTER_MAP.put(6.0,  new ShooterParams(69.8, 1.53));
+        SHOOTER_MAP.put(1.971,  new ShooterParams(40, 0.83));
+        SHOOTER_MAP.put(2.585,  new ShooterParams(44, 1.4));
+        SHOOTER_MAP.put(3.143,  new ShooterParams(48, 1.13));
+        SHOOTER_MAP.put(3.346,  new ShooterParams(52, 0.98));
+        SHOOTER_MAP.put(3.779,  new ShooterParams(56.5, 1.37));
+        SHOOTER_MAP.put(4.143,  new ShooterParams(61, 1.29));
+        SHOOTER_MAP.put(4.593,  new ShooterParams(62.0, 1.42));
+        SHOOTER_MAP.put(5.2,  new ShooterParams(64, 1.72));
+        SHOOTER_MAP.put(5.818,  new ShooterParams(68, 1.79));
         SHOOTER_MAP.put(9.3,  new ShooterParams(100.0, 2.18));
 
         // Fill distance interpolation map
