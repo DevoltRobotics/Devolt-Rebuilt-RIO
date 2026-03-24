@@ -36,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Commands.AutoShootCommand;
 import frc.robot.Commands.SOTFCommand;
 import frc.robot.Constants.CANId;
 import frc.robot.Constants.TurretsPos;
@@ -283,29 +284,32 @@ public class RobotContainer {
                 new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, -2, 3)
         ));
 
+        joystick.x().onTrue(new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 0, 0));
+
         joystick.x().onFalse(new ParallelCommandGroup(
                 turretLeftSubsystem.setTurretPosCMD(0),
                 turretRightSubsystem.setTurretPosCMD(0),
-                shooterLeftSubsystem.SetVelocityCMD(0),
-                shooterRightSubsystem.SetVelocityCMD(0)));
+                shooterLeftSubsystem.SetVelocityCMD(53),
+                shooterRightSubsystem.SetVelocityCMD(53)));
+                transferSubsystem.StopTransferCMD(transferSubsystem);
         new JoystickButton(buttonBoard, 3).onFalse(
                 new ParallelCommandGroup(
                         turretLeftSubsystem.setTurretPosCMD(0),
                         turretRightSubsystem.setTurretPosCMD(0),
-                        shooterLeftSubsystem.SetVelocityCMD(0),
-                        shooterRightSubsystem.SetVelocityCMD(0)));
+                        shooterLeftSubsystem.SetVelocityCMD(53),
+                        shooterRightSubsystem.SetVelocityCMD(53)));
          new JoystickButton(buttonBoard, 2).onFalse(
                 new ParallelCommandGroup(
                         turretLeftSubsystem.setTurretPosCMD(0),
                         turretRightSubsystem.setTurretPosCMD(0),
-                        shooterLeftSubsystem.SetVelocityCMD(0),
-                        shooterRightSubsystem.SetVelocityCMD(0)));
+                        shooterLeftSubsystem.SetVelocityCMD(53),
+                        shooterRightSubsystem.SetVelocityCMD(53)));
          new JoystickButton(buttonBoard, 4).onFalse(
                 new ParallelCommandGroup(
                         turretLeftSubsystem.setTurretPosCMD(0),
                         turretRightSubsystem.setTurretPosCMD(0),
-                        shooterLeftSubsystem.SetVelocityCMD(0),
-                        shooterRightSubsystem.SetVelocityCMD(0)));
+                        shooterLeftSubsystem.SetVelocityCMD(53),
+                        shooterRightSubsystem.SetVelocityCMD(53)));
 
         joystick.y().onTrue(new InstantCommand(() -> drivetrain.resetRotation(new Rotation2d(0))));
 
