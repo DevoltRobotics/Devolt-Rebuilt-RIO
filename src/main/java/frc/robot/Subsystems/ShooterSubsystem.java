@@ -56,9 +56,17 @@ public class ShooterSubsystem extends SubsystemBase {
     });
   }
 
-  public double getVelocity(){
-    return Lflywheel.getVelocity().getValueAsDouble();
-  }
+  public double getVelocity() {
+  return Lflywheel.getVelocity().getValueAsDouble();
+}
+
+public double getVelocityError() {
+  return desiredVelocity - getVelocity();
+}
+
+public boolean IsReadyToShoot() {
+  return Math.abs(getVelocityError()) < 2;
+}
 
 
 }

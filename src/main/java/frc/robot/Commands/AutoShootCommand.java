@@ -1,5 +1,7 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Subsystems.CommandSwerveDrivetrain;
@@ -7,49 +9,69 @@ import frc.robot.Subsystems.ShooterSubsystem;
 import frc.robot.Subsystems.TransferSubsystem;
 import frc.robot.Subsystems.TurretSubsystem;
 
-public class AutoShootCommand extends ParallelCommandGroup{
-    CommandSwerveDrivetrain drivetrain;
-    ShooterSubsystem leftshooterSubsystem;
-    TurretSubsystem leftturretSubsystem;
-    ShooterSubsystem rightshooterSubsystem;
-    TurretSubsystem rightturretSubsystem;
-    TransferSubsystem transferSubsystem;
-    double xOffset = 0;
-    double yOffstet = 0;
+public class AutoShootCommand extends ParallelCommandGroup {
 
-    public AutoShootCommand(CommandSwerveDrivetrain drivetrain,
-      ShooterSubsystem leftshooterSubsystem,
-      TurretSubsystem leftturretSubsystem,
-      ShooterSubsystem rightshooterSubsystem,
-      TurretSubsystem rightturretSubsystem,
-      TransferSubsystem transferSubsystem,
-      double xOffset,
-      double yOffstet
-      ){
-        this.leftturretSubsystem = leftturretSubsystem;
-        this.leftshooterSubsystem = leftshooterSubsystem;
-        this.rightturretSubsystem = rightturretSubsystem;
-        this.rightshooterSubsystem = rightshooterSubsystem;
-        this.drivetrain = drivetrain;
+    private final TransferSubsystem transferSubsystem;
+
+    public AutoShootCommand(
+        CommandSwerveDrivetrain drivetrain,
+        ShooterSubsystem leftShooterSubsystem,
+        TurretSubsystem leftTurretSubsystem,
+        ShooterSubsystem rightShooterSubsystem,
+        TurretSubsystem rightTurretSubsystem,
+        TransferSubsystem transferSubsystem,
+        double xOffset,
+        double yOffset
+    ) {
         this.transferSubsystem = transferSubsystem;
-        this.xOffset = xOffset;
-        this.yOffstet = yOffstet;
+
+        SOTFCommand leftSOTF =
+            new SOTFCommand(drivetrain, leftShooterSubsystem, leftTurretSubsystem, yOffset, xOffset);
+
+        SOTFCommand rightSOTF =
+            new SOTFCommand(drivetrain, rightShooterSubsystem, rightTurretSubsystem, yOffset, xOffset);
+
+      FunctionalCommand transferLogic = new FunctionalCommand(
+
+    // initialize
+    () -> {},
+
+    // execute
+    () -> {
+        boolean leftReady = leftTurretSubsystem.IsReadyToShoot() && leftShooterSubsystem.IsReadyToShoot();
+        boolean rightReady = rightTurretSubsystem.IsReadyToShoot() && rightShooterSubsystem.IsReadyToShoot();
+        boolean bothReady = leftReady && rightReady;
+
+        SmartDashboard.putBoolean("AutoShoot/LeftReady", leftReady);
+        SmartDashboard.putBoolean("AutoShoot/RightReady", rightReady);
+        SmartDashboard.putBoolean("AutoShoot/BothReady", bothReady);
+
+        if (bothReady) {
+            transferSubsystem.setSpeeds(1, 120);
+            SmartDashboard.putBoolean("AutoShoot/TransferOn", true);
+        } else {
+            transferSubsystem.setSpeeds(0, 0);
+            SmartDashboard.putBoolean("AutoShoot/TransferOn", false);
+        }
+    },
+
+    (interrupted) -> {
+        transferSubsystem.setSpeeds(0, 0);
+        SmartDashboard.putBoolean("AutoShoot/TransferOn", false);
+    },
+
+    // isFinished
+    () -> false,
+
+    transferSubsystem
+);
 
         addCommands(
-            new SOTFCommand(drivetrain, leftshooterSubsystem, leftturretSubsystem, yOffstet, xOffset),
-            new SOTFCommand(drivetrain, rightshooterSubsystem, rightturretSubsystem, yOffstet, xOffset),
-            new RunCommand(()->{
-                if (leftturretSubsystem.IsReadyToShoot() && rightturretSubsystem.IsReadyToShoot()) {
-                transferSubsystem.setSpeeds(1, 120);
-                }else{
-                    transferSubsystem.setSpeeds(0,0);
-                }
-            }, transferSubsystem)
-
+            leftSOTF,
+            rightSOTF,
+            transferLogic
         );
-
     }
 
 
-    
 }
