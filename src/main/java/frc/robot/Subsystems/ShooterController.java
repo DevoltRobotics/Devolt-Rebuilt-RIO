@@ -40,12 +40,12 @@ public class ShooterController {
 
     static {
         SHOOTER_MAP.put(1.971,  new ShooterParams(40, 0.83));
-        SHOOTER_MAP.put(2.585,  new ShooterParams(44, 1.4));
-        SHOOTER_MAP.put(3.143,  new ShooterParams(48, 1.13));
-        SHOOTER_MAP.put(3.346,  new ShooterParams(52, 0.98));
-        SHOOTER_MAP.put(3.779,  new ShooterParams(56.5, 1.37));
-        SHOOTER_MAP.put(4.143,  new ShooterParams(61, 1.29));
-        SHOOTER_MAP.put(4.593,  new ShooterParams(62.0, 1.42));
+        SHOOTER_MAP.put(2.585,  new ShooterParams(46, 1.4));
+        SHOOTER_MAP.put(3.143,  new ShooterParams(51, 1.13));
+        SHOOTER_MAP.put(3.346,  new ShooterParams(53, 0.98));
+        SHOOTER_MAP.put(3.779,  new ShooterParams(57, 1.37));
+        SHOOTER_MAP.put(4.143,  new ShooterParams(62, 1.29));
+        SHOOTER_MAP.put(4.593,  new ShooterParams(63.0, 1.42));
         SHOOTER_MAP.put(5.2,  new ShooterParams(64, 1.72));
         SHOOTER_MAP.put(5.818,  new ShooterParams(68, 1.79));
        // SHOOTER_MAP.put(9.3,  new ShooterParams(100.0, 2.18));

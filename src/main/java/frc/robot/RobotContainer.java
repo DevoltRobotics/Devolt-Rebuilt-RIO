@@ -139,7 +139,7 @@ public class RobotContainer {
     LFlywheelConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     LFlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     LFlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
-    LFlywheelConfig.Slot0.kP = 0.173;
+    LFlywheelConfig.Slot0.kP = 0.17;
     LFlywheelConfig.Slot0.kV = 0.115;
     LFlywheelConfig.Slot0.kS = 0.4;
     Lflywheel.getConfigurator().apply(LFlywheelConfig);
