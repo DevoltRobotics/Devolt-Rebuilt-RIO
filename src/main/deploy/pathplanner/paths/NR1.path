@@ -79,7 +79,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.3508771929824565,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 1.1859649122806941,
@@ -91,7 +91,7 @@
     },
     {
       "waypointRelativePos": 3.4736842105263155,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -107,13 +107,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Laguna",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

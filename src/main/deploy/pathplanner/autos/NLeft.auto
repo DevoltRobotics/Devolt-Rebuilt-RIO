@@ -71,6 +71,18 @@
                     {
                       "type": "named",
                       "data": {
+                        "name": "transferon"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
                         "name": "intakeup"
                       }
                     },
@@ -150,6 +162,18 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "transferoff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reset"
           }
         },
         {
@@ -191,7 +215,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 3.9999999999999996
                 }
               },
               {
@@ -204,6 +228,18 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "transferon"
+                      }
+                    },
                     {
                       "type": "wait",
                       "data": {
@@ -293,11 +329,29 @@
               }
             ]
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "transferoff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopintake"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Laguna",
   "choreoAuto": false
 }

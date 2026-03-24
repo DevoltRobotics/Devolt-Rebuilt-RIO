@@ -88,6 +88,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "legacy",
   "choreoAuto": false
 }

@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 6.165294871794873,
+        "x": 5.63,
         "y": 0.6628205128205127
       },
       "prevControl": {
-        "x": 5.193212663221591,
-        "y": 0.4281799797166159
+        "x": 4.655990545800495,
+        "y": 0.4363131550372149
       },
       "nextControl": {
-        "x": 6.839730769230769,
-        "y": 0.8256153846153849
+        "x": 6.505492289442469,
+        "y": 0.8664175563463812
       },
       "isLocked": false,
       "linkedName": null
@@ -57,7 +57,7 @@
       },
       "nextControl": {
         "x": 6.967641025641027,
-        "y": 0.34885897435897384
+        "y": 0.34885897435897373
       },
       "isLocked": false,
       "linkedName": null
@@ -78,24 +78,24 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.8561403508771951,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.5541740674955616,
+      "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.4807017543859609,
+      "waypointRelativePos": 1.3357015985790404,
       "rotationDegrees": -81.75202702076163
     },
     {
-      "waypointRelativePos": 1.9368421052631561,
-      "rotationDegrees": -158.8901463313379
+      "waypointRelativePos": 1.5985790408525768,
+      "rotationDegrees": -102.64289690026318
     },
     {
-      "waypointRelativePos": 2.589473684210535,
+      "waypointRelativePos": 2.4724689165186438,
       "rotationDegrees": 90.30835933338832
     },
     {
       "waypointRelativePos": 3.2701754385964947,
-      "rotationDegrees": 0.0
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -111,13 +111,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Laguna",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

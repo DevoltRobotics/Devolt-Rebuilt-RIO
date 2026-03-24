@@ -37,12 +37,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "stopintake"
-          }
-        },
-        {
           "type": "deadline",
           "data": {
             "commands": [
@@ -62,6 +56,18 @@
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "transferon"
+                      }
+                    },
                     {
                       "type": "wait",
                       "data": {
@@ -150,6 +156,24 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopintake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "transferoff"
           }
         },
         {
@@ -213,6 +237,18 @@
                     {
                       "type": "named",
                       "data": {
+                        "name": "transferon"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
                         "name": "intakeup"
                       }
                     },
@@ -293,11 +329,29 @@
               }
             ]
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "reset"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stopintake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "transferoff"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Laguna",
   "choreoAuto": false
 }

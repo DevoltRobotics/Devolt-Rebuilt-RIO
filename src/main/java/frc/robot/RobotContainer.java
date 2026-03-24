@@ -135,7 +135,7 @@ public class RobotContainer {
 
        
 
-    LFlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    LFlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     LFlywheelConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     LFlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     LFlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
@@ -144,7 +144,7 @@ public class RobotContainer {
     LFlywheelConfig.Slot0.kS = 0.4;
     Lflywheel.getConfigurator().apply(LFlywheelConfig);
 
-    RFlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    RFlywheelConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     RFlywheelConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     RFlywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
     RFlywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
