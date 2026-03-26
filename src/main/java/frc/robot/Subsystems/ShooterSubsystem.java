@@ -4,7 +4,6 @@
 
 package frc.robot.Subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,7 +17,6 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private TalonFX Lflywheel;
 
-  private final TalonFXConfiguration FlywheelConfig = new TalonFXConfiguration();
 
   private VelocityVoltage Velocity = new VelocityVoltage(0);
   

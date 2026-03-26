@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -13,7 +14,7 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-
+  private final Servo indicator = new Servo(0);
 
   public Robot() {
     m_robotContainer = new RobotContainer();
@@ -37,8 +38,8 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
       SmartDashboard.putNumber("Driver/POV", m_robotContainer.joystick.getHID().getPOV());
       SmartDashboard.putBoolean("ApriltagPresent", apriltagPresent);
-
-
+    indicator.set(apriltagPresent ? 1 : .280);
+    
     /*
      * This example of adding Limelight is very simple and may not be sufficient for on-field use.
      * Users typically need to provide a standard deviation that scales with the distance to target

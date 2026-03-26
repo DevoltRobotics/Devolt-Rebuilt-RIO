@@ -125,8 +125,8 @@ public class RobotContainer {
                                                         new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
                                                         new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)));
         NamedCommands.registerCommand("reset", new ParallelCommandGroup(
-                turretLeftSubsystem.setTurretPosCMD(0), shooterLeftSubsystem.SetVelocityCMD(0),
-                turretRightSubsystem.setTurretPosCMD(0), shooterRightSubsystem.SetVelocityCMD(0)));
+                turretLeftSubsystem.setTurretPosCMD(0), shooterLeftSubsystem.SetVelocityCMD(53),
+                turretRightSubsystem.setTurretPosCMD(0), shooterRightSubsystem.SetVelocityCMD(53)));
 
         NamedCommands.registerCommand("grabPosition", new InstantCommand(()->intakeSubsystem.setPosition(intakeSubsystem.intakeDownPos)));
         NamedCommands.registerCommand("grabOn", intakeSubsystem.IntakeinCMD(intakeSubsystem));
@@ -270,8 +270,7 @@ public class RobotContainer {
         new JoystickButton(buttonBoard, 9).onFalse(transferSubsystem.StopTransferCMD(transferSubsystem));
 
         new JoystickButton(buttonBoard, 3).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 0, 0),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 0, 0)
+               new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 0, 0)
         ));
 
         new JoystickButton(buttonBoard, 2).onTrue(new ParallelCommandGroup(

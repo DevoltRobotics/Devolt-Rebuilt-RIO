@@ -2,7 +2,7 @@ package frc.robot.Subsystems;
 
 import static edu.wpi.first.units.Units.*;
 
-
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
@@ -407,9 +407,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         PIDController rotPID = new PIDController(.22, .03, 0);
         rotPID.enableContinuousInput(-180, 180);
         PIDController yPID = new PIDController(6, .01, 0);
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        double rev = (alliance.get() == Alliance.Red) ? 1:-1;
         rotPID.setSetpoint(getState().Pose.getRotation().getDegrees() > 90 || getState().Pose.getRotation().getDegrees() < -90 ?  180 : 0);
         yPID.setSetpoint(getState().Pose.getY() > 4 ? 7.4 : .6);
-        double[] result = {-yPID.calculate(getState().Pose.getY()), rotPID.calculate(getState().Pose.getRotation().getDegrees())};
+        double[] result = {-yPID.calculate(getState().Pose.getY()) * rev, rotPID.calculate(getState().Pose.getRotation().getDegrees())};
         rotPID.close();
         yPID.close();
         return result;
