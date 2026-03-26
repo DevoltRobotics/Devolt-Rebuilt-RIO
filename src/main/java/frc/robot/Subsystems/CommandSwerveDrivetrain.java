@@ -352,12 +352,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         LimelightHelpers.PoseEstimate mt2;
         LimelightHelpers.PoseEstimate mt2f;
+
+
+
         mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.backLimelightName);
         mt2f = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.frontLimelightName);
 
         boolean rejectUpdate = false;
         boolean rejectUpdatef = false;
 
+       /* if (mt2.avgTagArea > mt2f.avgTagArea){
+            rejectUpdatef = true;
+        }else{
+            rejectUpdate= true;
+        }*/
+        
         if (Math.abs(getState().Speeds.omegaRadiansPerSecond)> 360){
             rejectUpdate = true;
             rejectUpdatef = true;

@@ -40,7 +40,6 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     Lflywheel.setControl(Velocity.withVelocity(desiredVelocity));
-    SmartDashboard.putNumber("Shooter/Target vel", desiredVelocity);
 
   }
 

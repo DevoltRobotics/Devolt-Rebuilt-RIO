@@ -73,8 +73,7 @@ public void initialize() {
     // filtro para que no brinque
     avgDt = 0.9 * avgDt + 0.1 * dt;
 
-    SmartDashboard.putNumber(turret.getName() + "/SOTF/dt", dt);
-    SmartDashboard.putNumber(turret.getName() + "/SOTF/avgDt", avgDt);
+   
     Optional<Alliance> alliance = DriverStation.getAlliance();
 
     if (alliance.isPresent() && !getAlliance) {
@@ -97,7 +96,7 @@ public void initialize() {
     Translation2d rotatedTurretOffset = turret.turretOffset.rotateBy(pose.getRotation());
     Translation2d turretFieldPos = pose.getTranslation().plus(rotatedTurretOffset);
 
-    Logger.recordOutput(turret.getName() + "/SOTF/HubPos", new Pose2d(new Translation2d(Goal_X, Goal_Y), new Rotation2d(0)));
+    //Logger.recordOutput(turret.getName() + "/SOTF/HubPos", new Pose2d(new Translation2d(Goal_X, Goal_Y), new Rotation2d(0)));
     Logger.recordOutput(turret.getName() + "/SOTF/TurretFieldPos", new Pose2d(turretFieldPos, pose.getRotation().plus(turret.getAngle())));
 
 
@@ -113,7 +112,7 @@ public void initialize() {
     );
 
     
-    Logger.recordOutput(turret.getName() + "/SOTF/DistanceToGoal", result.distanceToGoal());
+    //Logger.recordOutput(turret.getName() + "/SOTF/DistanceToGoal", result.distanceToGoal());
 
     shooter.setVelocity(result.requiredRps());
     turret.setAngle(result.turretFieldAngle().minus(pose.getRotation()).getDegrees());

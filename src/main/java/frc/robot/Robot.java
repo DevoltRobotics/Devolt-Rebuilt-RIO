@@ -14,7 +14,7 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  private final Servo indicator = new Servo(0);
+  private final Servo indicator = new Servo(1);
 
   public Robot() {
     m_robotContainer = new RobotContainer();

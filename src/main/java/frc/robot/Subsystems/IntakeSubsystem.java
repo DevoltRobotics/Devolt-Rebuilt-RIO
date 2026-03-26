@@ -118,10 +118,10 @@ public class IntakeSubsystem extends SubsystemBase {
       pivot.set(PivotOut);
     }
     
-    Logger.recordOutput("Pivot/setpoint", desiredPosition);
+    /*Logger.recordOutput("Pivot/setpoint", desiredPosition);
     Logger.recordOutput("Pivot/error", pivotPID.getError());
     Logger.recordOutput("Pivot/output", PivotOut);
-    Logger.recordOutput("Pivot/Pos", pivotEncoder.getPosition());
+    Logger.recordOutput("Pivot/Pos", pivotEncoder.getPosition());*/
   }
 
   public void setRollerSpeed(double desiredRollerSpeed) {

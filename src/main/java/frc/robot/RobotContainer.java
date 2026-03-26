@@ -89,7 +89,6 @@ public class RobotContainer {
             drivetrain.getState().Pose,Lflywheel);
     public final TurretSubsystem turretLeftSubsystem = new TurretSubsystem(
             turretLeftMotor,
-            turretCoordinator,
             TurretCoordinator.Side.LEFT,
             TurretsPos.LeftTurretOffset);
 
@@ -106,7 +105,6 @@ public class RobotContainer {
             drivetrain.getState().Pose,Rflywheel);
     public final TurretSubsystem turretRightSubsystem = new TurretSubsystem(
             turretRightMotor,
-            turretCoordinator,
             TurretCoordinator.Side.RIGHT,
             TurretsPos.RightTurretOffset);
 
@@ -274,13 +272,11 @@ public class RobotContainer {
         ));
 
         new JoystickButton(buttonBoard, 2).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, 2, 3),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, 2,3)
+                 new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 4, 2)
         ));
 
         new JoystickButton(buttonBoard, 4).onTrue(new ParallelCommandGroup(
-                new SOTFCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, -2, 3),
-                new SOTFCommand(drivetrain, shooterRightSubsystem, turretRightSubsystem, -2, 3)
+                new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 4, -2)
         ));
 
         joystick.x().onTrue(new AutoShootCommand(drivetrain, shooterLeftSubsystem, turretLeftSubsystem, shooterRightSubsystem, turretRightSubsystem, transferSubsystem, 0, 0));

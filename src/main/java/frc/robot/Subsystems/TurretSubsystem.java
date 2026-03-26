@@ -4,7 +4,6 @@
 
 package frc.robot.Subsystems;
 
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
@@ -99,7 +98,6 @@ public class TurretSubsystem extends SubsystemBase {
 
   public TurretSubsystem(
       SparkMax motor,
-      TurretCoordinator coordinator,
       TurretCoordinator.Side side,
       Translation2d turretOffset
   ) {
@@ -109,9 +107,9 @@ public class TurretSubsystem extends SubsystemBase {
     //this.coordinator = coordinator;
     //this.side = side;
     
-    setName("TurretSubsystem-" + side.name());
+    /*setName("TurretSubsystem-" + side.name());
 
-    Logger.recordOutput(getName() + "/TurretMechanism2d", mech);
+    Logger.recordOutput(getName() + "/TurretMechanism2d", mech);*/
 
     resetOffsetCMD().schedule();
   }
@@ -151,7 +149,7 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.set(turretOut);
 
     // 7) Visual + telemetry
-    turretLigament.setAngle(turretRelativePosDeg);
+    /*turretLigament.setAngle(turretRelativePosDeg);
     targetLigament.setAngle(commandedSetpointDeg);
     upperLimitLigament.setAngle(upperLimitDeg);
     lowerLimitLigament.setAngle(lowerLimitDeg);
@@ -161,7 +159,7 @@ public class TurretSubsystem extends SubsystemBase {
     Logger.recordOutput(getName() + "/CmdSetpointDeg", commandedSetpointDeg);
     Logger.recordOutput(getName() + "/Out", turretOut);
     Logger.recordOutput(getName() + "/LowerLimitDeg", lowerLimitDeg);
-    Logger.recordOutput(getName() + "/UpperLimitDeg", upperLimitDeg);
+    Logger.recordOutput(getName() + "/UpperLimitDeg", upperLimitDeg);*/
   }
 
   // ---------------- Public API ----------------

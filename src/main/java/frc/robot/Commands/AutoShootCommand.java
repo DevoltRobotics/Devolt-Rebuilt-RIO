@@ -41,22 +41,16 @@ public class AutoShootCommand extends ParallelCommandGroup {
         boolean rightReady = rightTurretSubsystem.IsReadyToShoot() && rightShooterSubsystem.IsReadyToShoot();
         boolean bothReady = leftReady && rightReady;
 
-        SmartDashboard.putBoolean("AutoShoot/LeftReady", leftReady);
-        SmartDashboard.putBoolean("AutoShoot/RightReady", rightReady);
-        SmartDashboard.putBoolean("AutoShoot/BothReady", bothReady);
-
+      
         if (bothReady) {
             transferSubsystem.setSpeeds(1, 120);
-            SmartDashboard.putBoolean("AutoShoot/TransferOn", true);
         } else {
             transferSubsystem.setSpeeds(0, 0);
-            SmartDashboard.putBoolean("AutoShoot/TransferOn", false);
         }
     },
 
     (interrupted) -> {
         transferSubsystem.setSpeeds(0, 0);
-        SmartDashboard.putBoolean("AutoShoot/TransferOn", false);
     },
 
     // isFinished

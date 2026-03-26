@@ -29,8 +29,7 @@ import frc.robot.Constants.CANId.CAN_Shooter;
 
 
 public class TransferSubsystem extends SubsystemBase {
-  private DigitalInput laserLeft = new DigitalInput(0);
-  private DigitalInput laserRight = new DigitalInput(1);
+  
 
   private SparkMax beltMotor = new SparkMax(CAN_Intake.TransferCan, MotorType.kBrushless);
 
@@ -86,8 +85,6 @@ public class TransferSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("leftTransfer", laserLeft.get());
-    SmartDashboard.putBoolean("rightTransfer", laserRight.get());
     kickerMotor.setControl(Velocity.withVelocity(desiredVelocity));
   }
 
